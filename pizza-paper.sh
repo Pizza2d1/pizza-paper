@@ -3,7 +3,7 @@
 
 #Current plans: Adding a way to select custom wallpapers with just one command rather then having to go through a function such as [...] --select 1
 
-VERSION=$"pizzapaper 1.1.0 unstable"		#Tells the user the version
+VERSION=$"pizzapaper 1.1.0"			#Tells the user the version
 user=$(whoami)					#Gets the username of the person calling the program so that it only affects that user's desktop
 
 if test -f /usr/local/bin/pizzapaper; then	#Sets variable to describe how the user should execute the program
@@ -58,7 +58,7 @@ function AddWallpaper (){
   fileL=$(zenity --file-selection --file-filter="*.jpg")				#Opens file selection but only allows *.jpg options to be used
   if [[ $fileL == *".jpg"* ]]; then							#Makes sure that the user's file choice was a .jpg image
     if [[  ${WallpaperList[@]} != *"$fileL"* ]]; then					#Checks to make sure that PART of $fileL is nowhere in the WallpaperList array 
-      eog $fileL
+      feh $fileL
       echo "$fileL" >> /home/$user/Documents/pizzapapers.txt
     else
       echo "That wallpaper is already in your list of wallpapers"
