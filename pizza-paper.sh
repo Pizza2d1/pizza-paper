@@ -8,9 +8,19 @@ AMOUNT_OF_SETTINGS=5                        #Will be used to know how many lines
 ROTATION_SPEED=3 #Seconds                 #Will determine how fast wallpapers will rotate with the rotatewallaper function
 #I like these variables better ^^^^^ so they get to be at the top
 
+<<<<<<< HEAD
 #Necessary checks needed for redundancy and being more user-friendly
 if [ -d /home/pizza2d1 ]; then				                                                #I AM THE ADMIN I GET SPECIAL PRIVILEGES BITCHES
   IAMGOD=true
+=======
+VERSION=$"pizzapaper 1.1.0"			#Tells the user the version
+user=$(whoami)					#Gets the username of the person calling the program so that it only affects that user's desktop
+
+if test -f /usr/local/bin/pizzapaper; then	#Sets variable to describe how the user should execute the program
+  ProgName="pizzapaper"
+elif test -f ./pizza-paper.sh; then
+  ProgName="./pizza-paper.sh"
+>>>>>>> 5b06502 (Updated file)
 else
   IAMGOD=false
 fi
@@ -83,6 +93,7 @@ function Less_Help (){                        #Runs when there are no arguments 
   fi
 }
 
+<<<<<<< HEAD
 function Help_Options (){                     #Gives the user instructions on how to use the program
   echo -e "I hate most --help descriptors that normal commands have that are overly-confusing, so I'm going to try to make this simple enough that a younger me could understand it\n"
   echo -e "$ProgName is a custom program that I made as a passion project to learn how to switch wallpapers in terminal, which eventually turned into a full passion project on learning how a small area of display bash-scripting works. Im also attempting to learn git commands alongside this so that I might become a better programmer and because I think it's interesting\n"
@@ -155,6 +166,14 @@ function AddWallpaper (){                     #Will let the user add a wallpaper
       fi
     elif [[ $URL == "" ]]; then
       echo "No link provided, exiting"
+=======
+function AddWallpaper (){
+  fileL=$(zenity --file-selection --file-filter="*.jpg")				#Opens file selection but only allows *.jpg options to be used
+  if [[ $fileL == *".jpg"* ]]; then							#Makes sure that the user's file choice was a .jpg image
+    if [[  ${WallpaperList[@]} != *"$fileL"* ]]; then					#Checks to make sure that PART of $fileL is nowhere in the WallpaperList array 
+      feh $fileL
+      echo "$fileL" >> /home/$user/Documents/pizzapapers.txt
+>>>>>>> 5b06502 (Updated file)
     else
       echo -e "Invalid link, make sure it contains an image extension type, E.G. \"IMAGE-NAME.[png | jpg | jpeg]\""  
     fi
