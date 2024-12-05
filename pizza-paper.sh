@@ -1,31 +1,33 @@
-
 #This is my own little thing that I made to switch up desktop wallpapers, it sucks but I think it works best for me
 #Im adding git to this to hopefully try to learn a bit more about it, so if this commit has more line than the master one then it worked
 
-VERSION=$"pizzapaper 1.0.2"
+#Current plans: Adding a way to select custom wallpapers with just one command rather then having to go through a function such as [...] --select 1
+
+VERSION=$"pizzapaper 1.0.3 unstable"
 user=$(whoami)									#Gets the username of the person calling the program so that it only affects that user's desktop
 save_wallpaper=$(gsettings get org.gnome.desktop.background picture-uri-dark)	#Will prepare to put the previous wallpaper's file location (before running the program) in a text file
 new_wallpaper=$(cat /home/$user/Documents/previous_wallpapers.txt)		#Will pull the data from the wallpaper text file so that it can become the new wallpaper in rotation
-#WallpaperList=$
 
-#INFILE=/home/$user/Documents/pizzapapers.txt
-#  for LINE in $(cat "$INFILE")
-#for t in ${WallpaperList[@]}; do
-
-#done
+WallpaperList=()
+PAPERS=/home/$user/Documents/pizzapapers.txt
+for LINE in $(cat "$PAPERS"); do
+  WallpaperList+=($LINE)
+done
 
 function Help_Options (){		#Gives the user instructions on how to use the program
   echo "This is my first attempt at making a help thing so Im going to try to make it as helpful for you as it can be to me"
   echo -e "\npizzapaper is a custom program that I made as a passion project to learn how to switch wallpapers in terminal, which eventually turned into a full passion project on learning how a small area of display bash-scripting works. Im also attempting to learn git commands alongside this so that I might become a better programmer and because I think it's interesting\n"
   echo -e "\nTo use this command you must do:\npizzapaper [ARG]"
   echo -e "E.G. "pizzapaper -a" or "pizzapaper -c"\n\n"
-  echo -e "   -h			Gives the user a simple idea of what options to choose\n"
+  echo -e "   -h			Gives the user a simple idea of what options to choose\n"					#The weird indentations are because of formatting issues
   echo -e "  --help		Will display this, a much more detailed explanation on how to use this program and its arguments\n"
   echo -e "   -a			Makes your wallpaper astolfo\n"
   echo -e "   -A			Makes your wallpaper astolfo, again, BUT IN 3D!\n"
   echo -e "   -c | -cat		Makes your wallpaper a bunger cat\n"
   echo -e "   -d | -dog		Makes your wallpaper the springfield meme, I know its dumb...\n"
-  echo -e "  --add			Lets you add wallpapers to a text file that you can select from (in the future)\n\n"
+  echo -e "  --add			Lets you add wallpapers to a text file that you can select from (in the future)\n"
+  echo -e "  --select		Lets you select what wallpaper you want to use our of your custom wallpapers that you have added\n"
+  echo -e "  --version		Echos the current pizzapaper version\n\n"
 }
 
 
@@ -39,17 +41,42 @@ function UserInput (){
 
 function AddWallpaper (){
   fileL=$(zenity --file-selection --file-filter="*.jpg")				#Opens file selection but only allows *.jpg options to be used
-  
   if [[ $fileL == *".jpg"* ]]; then
-    if [[  $WallpaperList != $fileL ]]; then
+    if [[  ${WallpaperList[@]} != *"$fileL"* ]]; then
       eog $fileL
-      echo "'file://$fileL'" >> /home/$user/Documents/pizzapapers.txt
+      echo "$fileL" >> /home/$user/Documents/pizzapapers.txt
+      cp $fileL /home/$user/Pictures/pizza-papers/
     else
       echo "That wallpaper is already in your list of wallpapers"
     fi
   else
     echo "You did not make a selection"
   fi
+}
+
+########################################################
+function SelectWallpaper (){								#The user chooses a wallpaper that they they have stored in a directory that they added using AddWallpaper
+  INFILE=/home/$user/Documents/pizzapapers.txt
+  Num=1
+  SelectionArray=()
+  for LINE in $(cat "$INFILE")
+  do
+    Picture="$(basename $LINE)"
+    echo "  $Num   $Picture"
+    ((Num+=1))
+    SelectionArray+=($LINE)
+  done
+  for ITEM in $SelectionArray; do
+    echo $ITEM
+  done
+  read -p "Which wallpaper would you like to choose?: " uinput  
+  re='^[0-9]+$'
+  if [[ $uinput =~ $re ]]; then
+    echo "Triggered"
+    echo $uinput
+    echo "${SelectionArray[ (($uinput-1)) ]}"
+  fi
+  gsettings set org.gnome.desktop.background picture-uri-dark ${SelectionArray[ (($uinput-1)) ]}
 }
 
 function RotateWallpaper (){
@@ -117,7 +144,7 @@ function Astolfo2_Wallpaper (){		#Sets the wallpaper to that one pink faggot
 #done
 
  
-options=$(getopt -o aAcdhr,cat,dog --long "add,help,version,color" -- "$@")
+options=$(getopt -o aAcdhr,cat,dog --long "add,select,help,version,color" -- "$@")
 [ $? -eq 0 ] || { 
     echo "Incorrect options provided"
     exit 1
@@ -149,9 +176,16 @@ while true; do
       \?)				#Doesn't fucking work for some reason, its supposed to detect gibberish like "-klaneofbaog"
          echo "Invalid option"
          exit;;
-    --add)
+    --add)				#Has the user select a .jpg file to add to a text file which lists all custom wallpapers
         shift;
         AddWallpaper
+        exit;;
+    --select)				#Lets the user select one of their custom wallpapers in a numbered list along with displaying the choice's names
+	if [[ $2 != *"--"* ]]; then
+          echo "Not implemented yet"
+        else
+          SelectWallpaper
+        fi
         exit;;
     --help)				#Will activate when pizzapaper --help is used, the BETTER option for getting info
         shift;
