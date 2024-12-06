@@ -50,7 +50,11 @@ ResetSettings (){
 options=$(getopt -o ar,add,remove --long "add,remove,retard,copy" -- "$@")
 =======
   if ! test -f /usr/local/bin/pizzapaper; then		#If pizzapaper is NOT found in the path file, it will add it
-    cp ./pizza-paper.sh /usr/local/bin/pizzapaper
+    if test -f */pizzapaper; then
+      cp ./pizza-paper.sh /usr/local/bin/pizzapaper
+    else
+      cp ./pizzapaper_testing /usr/local/bin/pizzapaper
+    fi
   else
     echo "pizzapaper is already in the path directory: /usr/local/bin/"
   fi
