@@ -1,20 +1,34 @@
 #This is my own little thing that I made to switch up desktop wallpapers, it sucks but I think it works best for me
 #Im adding git to this to hopefully try to learn a bit more about it, so if this commit has more line than the master one then it worked
 
-#Current plans: Adding a way to select custom wallpapers with just one command rather then having to go through a function such as [...] --select 1
 
-VERSION=$"pizzapaper 1.1.0 unstable"		#Tells the user the version
-user=$(whoami)					#Gets the username of the person calling the program so that it only affects that user's desktop
+VERSION=$"pizzapaper 1.1.4"					#Tells the user the version
+user=$(whoami)							#Gets the username of the person calling the program so that it only affects that user's desktop
 
-if test -f /usr/local/bin/pizzapaper; then	#Sets variable to describe how the user should execute the program
-  ProgName="pizzapaper"
-elif test -f ./pizza-paper.sh; then
-  ProgName="pizza-paper.sh"
+if [ -d "/home/pizza2d1" ]; then				#I AM THE ADMIN I GET SPECIAL PRIVILEGES BITCHES
+  IAMGOD=true
 else
-  echo "Bro you don't got files, download that shit again bozo"
+  IAMGOD=false
 fi
 
-WallpaperList=()				#Needed so that that user can have custom wallpapers
+if [ ! -d "/home/$user/Documents" ]; then			#Makes a Documents directory in case you are a weird little idiot that feels like they're better than everyone else
+  echo "wtf why don't you have a Documents folder, making one now to store a list of your wallpapers..."
+  mkdir /home/$user/Documents
+fi
+
+if ! test -f /home/$user/Documents/pizzapapers.txt; then	#Will make a pizzapapers text file to list all the custom wallpapers (in path/to/image style) that the user adds
+  touch /home/$user/Documents/pizzapapers.txt
+fi
+
+if test -f /usr/local/bin/pizzapaper; then			#Sets variable to describe how the user should execute the program, the name of the program
+  ProgName="pizzapaper"
+elif test -f ./pizza-paper.sh; then
+  ProgName="./pizza-paper.sh"
+else
+  echo "Bro how tf are you running this, you don't have the normal files"
+fi
+
+WallpaperList=()						#Needed so that that user can have custom wallpapers
 PAPERS=/home/$user/Documents/pizzapapers.txt
 for LINE in $(cat "$PAPERS"); do
   WallpaperList+=($LINE)
@@ -23,28 +37,29 @@ done
 
 function Help_Options (){		#Gives the user instructions on how to use the program
   echo -e "This is my first attempt at making a help thing so Im going to try to make it as helpful for you as it can be to me\n"
-  echo -e "pizzapaper is a custom program that I made as a passion project to learn how to switch wallpapers in terminal, which eventually turned into a full passion project on learning how a small area of display bash-scripting works. Im also attempting to learn git commands alongside this so that I might become a better programmer and because I think it's interesting\n"
-  echo -e "To use this command you must do:\npizzapaper [ARG]"
-  echo -e "E.G. \"pizzapaper -a\", \"pizzapaper -cat\", or \"pizzapaper --add\"\n\n"
-  echo -e "  --version  		Echos the current pizzapaper version\n"
+  echo -e "$ProgName is a custom program that I made as a passion project to learn how to switch wallpapers in terminal, which eventually turned into a full passion project on learning how a small area of display bash-scripting works. Im also attempting to learn git commands alongside this so that I might become a better programmer and because I think it's interesting\n"
+  echo -e "To use this command you must do:\n  $ProgName [ARG]"
+  echo -e "  E.G. \"$ProgName -a\", \"$ProgName -cat\", or \"$ProgName --add\"\n\n"
+  echo -e "  --version  		Echos the current $ProgName version\n"
   echo -e "  --help     		Will display this, a much more detailed explanation on how to use this program and its arguments\n"
   echo -e "   -h        		Gives the user a simple idea of what options to choose\n"
-  echo -e "   -a        		Makes your wallpaper astolfo\n"
-  echo -e "   -A        		Makes your wallpaper astolfo, again, BUT IN 3D!\n"
-  echo -e "   -c | -cat 		Makes your wallpaper a bunger cat\n"
-  echo -e "   -d | -dog 		Makes your wallpaper the springfield meme, I know its dumb...\n"
+  echo -e "   -a        		(NOT WORKING) Makes your wallpaper astolfo\n"
+  echo -e "   -A        		(NOT WORKING) Makes your wallpaper astolfo, again, BUT IN 3D!\n"
+  echo -e "   -c | -cat 		(NOT WORKING) Makes your wallpaper a bunger cat\n"
+  echo -e "   -d | -dog 		(NOT WORKING) Makes your wallpaper the springfield meme, I know its dumb...\n"
   echo -e "  --add      		Lets you add wallpapers to a text file that you can select from (in the future)\n"
-  echo -e "  --select   		Lets you select what wallpaper you want to use our of your custom wallpapers that you have added\n\n"
+  echo -e "  --select   		Lets you select what wallpaper you want to use our of your custom wallpapers that you have added, USAGE: --select | --select [wallpaper number]\n\n"
 }
 
 function Less_Help (){			#Runs when there are no arguments and whent the user inputs "pizzapaper -h"
-  echo -e "\nPick which argument you want to use with \"pizzapaper [-a|A|c/cat|d/dog | --help|add|select|version]\"\n (The --help option may be more helpful)\n"
+  echo -e "\nPick which argument you want to use with \"$ProgName [-a|A|c/cat|d/dog | --help|add|select|version]\"\n (The --help option may be more helpful)\n"
   echo -e "This program DOES NOT automatically work as \"pizzapaper [ARG]\" you will need to run it as \"./pizza-paper.sh [ARG]\"\n"
   echo -e "If you would like to run the program as \"pizzapaper [ARG]\" (as I recommend) you will have to run \"sudo ./pizza_path_partner -add\" to add pizzapaper to your \$PATH files"
-  echo -e "To remove the pizzapaper file in your \$PATH directory, use \"sudo pizza-paper.sh [-remove|-delete]\" OR \"sudo rm /usr/local/bin/pizzapaper\"\n"
+  echo -e "To remove the pizzapaper file in your \$PATH directory, use \"sudo path-adder.sh -remove\" OR \"sudo rm /usr/local/bin/pizzapaper\""
+  echo -e "After you run it, you can delete pizza-paper.sh :3\n"
 }
 
-#Kinda useless rn
+#Kinda useless rn, might use as a reference though
 function UserInput (){
   name=$(zenity --entry --title="Please enter your name" --text="Enter your name:")	#Takes the name of the person using an "entry" input box
   if [ $? -eq 0 ]
@@ -57,9 +72,8 @@ function AddWallpaper (){
   fileL=$(zenity --file-selection --file-filter="*.jpg")				#Opens file selection but only allows *.jpg options to be used
   if [[ $fileL == *".jpg"* ]]; then							#Makes sure that the user's file choice was a .jpg image
     if [[  ${WallpaperList[@]} != *"$fileL"* ]]; then					#Checks to make sure that PART of $fileL is nowhere in the WallpaperList array 
-      eog $fileL
+      feh $fileL -E 128 -y 128								#Show the new wallpaper in a -E (height) 128 px and -y (width) 128 px (yes they made -y be width)
       echo "$fileL" >> /home/$user/Documents/pizzapapers.txt
-      cp $fileL /home/$user/Pictures/pizza-papers/
     else
       echo "That wallpaper is already in your list of wallpapers"
     fi
@@ -82,7 +96,7 @@ function SelectWallpaper (){								#The user chooses a wallpaper that they they
   read -p "Which wallpaper would you like to choose?: " uinput				#Has the user input a selection in the terminal  
   re='^[0-9]+$'
   if [[ $uinput =~ $re ]]; then								#Checks to see that the user's input is a number
-    echo "${SelectionArray[ (($uinput-1)) ]}"
+    echo "${SelectionArray[ (($uinput-1)) ]} is now your new wallpaper"
     gsettings set org.gnome.desktop.background picture-uri-dark ${SelectionArray[ (($uinput-1)) ]}
   else
     echo "Invalid input"
@@ -108,7 +122,7 @@ function RotateWallpaper (){
 
 #For setting the wallpapers, the user might either have "picture-uri-dark" or "picture-uri" being displayed, so its best to just set both of them.-
 #-Think of them like layers, where on one system picture-uri is on top of picture-uri-dark and vice versa, we just change both so we dont deal with it
-function Astolfo_Wallpaper (){		#Sets the wallpaper to that one pink faggot
+function Astolfo_Wallpaper (){		#Sets the wallpaper to that one pink faggot			#Oh right, they won't have these downloaded, I should remove these
   gsettings set org.gnome.desktop.background picture-uri-dark file:///home/$user/Pictures/wallpapers/astolfo.jpg
   gsettings set org.gnome.desktop.background picture-uri file:///home/$user/Pictures/wallpapers/astolfo.jpg
   echo Pink bitch has been deployed
@@ -130,7 +144,7 @@ function Springfield_Wallpaper (){	#Sets the wallpaper to the springfield meme
 }
 
  
-options=$(getopt -o aAcdhr,cat,dog --long "add,select,help,version,remove,addtopath,color" -- "$@")
+options=$(getopt -o aAcdhr,cat,dog --long "add,select,help,version,remove,color" -- "$@")
 [ $? -eq 0 ] || { 
     echo "Incorrect options provided"
     exit 1
@@ -141,20 +155,36 @@ while true; do
        a)				#Will activate if the user is dumb and only does "a" for an "argument"
          echo "Yeah, ah to you too"
          exit;;
-      -a)				#Will activate when pizzapaper -a is used
-         Astolfo_Wallpaper
+      -a)				#(NOT WORKING)Will activate when pizzapaper -a is used
+         if $IAMGOD; then
+           Astolfo_Wallpaper
+         else
+           echo "This don't work, I'm adding online link support now"
+         fi
          exit;;
-      -A)				#Will activate when pizzapaper -A is used
-         Astolfo2_Wallpaper
+      -A)				#(NOT WORKING)Qill activate when pizzapaper -A is used
+         if $IAMGOD; then
+           Astolfo2_Wallpaper
+         else
+           echo "This don't work, I'm adding online link support now"
+         fi
          exit;;
       -h)				#Will activate when pizzapaper -h is used
          Less_Help
          exit;;
-      -c | -cat)			#Will activate when pizzapaper -c or -cat is used
-         Bunger_Wallpaper
+      -c | -cat)			#(NOT WORKING)Will activate when pizzapaper -c or -cat is used
+         if $IAMGOD; then
+           Bunger_Wallpaper
+         else
+           echo "This don't work, I'm adding online link support now"
+         fi
          exit;;
-      -d | -dog)			#Will activate when pizzapaper -d or -dog is used
-         Springfield_Wallpaper
+      -d | -dog)			#(NOT WORKING)Will activate when pizzapaper -d or -dog is used
+         if $IAMGOD; then
+           Springfield_Wallpaper
+         else
+           echo "This don't work, I'm adding online link support now"
+         fi
          exit;;
       -r)				#Stupid fucking function, DONT USE THIS, it ruined my life and gave me AIDS
          RotateWallpaper
@@ -168,8 +198,16 @@ while true; do
         exit;;
     --select)				#Lets the user select one of their custom wallpapers in a numbered list along with displaying the choice's names
         shift;
-        if [[ $2 != *"--"* ]]; then
-          echo "Not implemented yet"
+        re='^[0-9]+$'
+        if [[ $2 =~ $re ]]; then	#Checks to see that the user's second argument is a number (if there even IS and argument)
+          INFILE=/home/$user/Documents/pizzapapers.txt
+          SelectionArray=()
+          for LINE in $(cat "$INFILE"); do
+            Picture="$(basename $LINE)"
+            SelectionArray+=($LINE)
+          done
+          echo "${SelectionArray[ (($2-1)) ]} is now your new wallpaper"
+          gsettings set org.gnome.desktop.background picture-uri-dark ${SelectionArray[ (($2-1)) ]}
         else
           SelectWallpaper
         fi
