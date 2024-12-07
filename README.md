@@ -1,10 +1,14 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # pizza-paper ver 1.2.7 stable
 The usually unstable version of pizza-paper that I keep here in case I want to work on it somewhere else or I accidentally delete the main files that I've been working on
 ___
 Most likely the last version that I work on unless I care enough
 =======
 # pizza-paper
+=======
+# pizza-paper version 1.1.4
+>>>>>>> bc92391 (Update README.md)
 A wallpaper switching bash script that I made to try and learn some bash (because I think Ill use it in future careers) and because I wanted it to be customizable to me, I use linux btw
 
 # How to use
