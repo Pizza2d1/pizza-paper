@@ -1,2 +1,3 @@
-# pizza-paper ver 1.1.0 unstable
-A wallpaper switching bash script that I made to try and learn some bash (because I think Ill use it in future careers) and because I wanted it to be customizable to me, I use linux btw
+# pizza-paper ver 1.1.4 stable
+The usually unstable version of pizza-paper that I keep here in case I want to work on it somewhere else or I accidentally delete the main files that I've been working on
+
