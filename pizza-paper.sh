@@ -90,7 +90,7 @@ function AddWallpaper (){                     #Will let the user add a wallpaper
   read -p "[1/2]: " uinput
   if [[ $uinput == "1" || $uinput == *"ile"* ]]; then                                  #Checks to see if the user chose 1 or file/File
     fileL=$(zenity --file-selection)				                                          #Opens file selection to choose a image file
-    if [[ $fileL == *"https"* ]] && [[ $fileL == *".jpg"* || $fileL == *".jpeg"* || $fileL == *".png"* ]]; then  #Will only accept URLs with https and valid image file extensions
+    if [[ $fileL == *".jpg"* || $fileL == *".jpeg"* || $fileL == *".png"* ]]; then  #Will only accept URLs with https and valid image file extensions
       if [[  ${WallpaperList[@]} != *"$fileL"* ]]; then					                      #Checks to make sure that PART of $fileL is nowhere in the WallpaperList array
         echo "$fileL" >> /home/$user/Documents/pizzapapers.txt
         echo "$(basename $fileL) has been added to your wallpapers"
