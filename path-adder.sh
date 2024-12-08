@@ -1,3 +1,6 @@
+#Can be used to copy pizza-paper.sh to one of your PATH folders, mainly so that you don't have to be in a specific directory to use it and I don't like it ending with .sh (github requires it)
+#YOU DO NOT NEED TO RUN THIS, IT IS COMPLETELY **OPTIONAL** AND IS ONLY FOR MILD CONVENIENCE
+
 RemoveFile (){
   if test -f /usr/local/bin/pizzapaper; then		#If pizzapaper is found in the path file, then it will delete it
     rm /usr/local/bin/pizzapaper
@@ -11,7 +14,7 @@ AddFile (){
     if test -f */pizzapaper; then
       cp ./pizza-paper.sh /usr/local/bin/pizzapaper
     else
-      cp ./pizzapaper_testing /usr/local/bin/pizzapaper
+      cp ./pizzapaper_testing.sh /usr/local/bin/pizzapaper
     fi
   else
     echo "pizzapaper is already in the path directory: /usr/local/bin/"
@@ -31,7 +34,7 @@ while true; do
       -r)
          RemoveFile
          exit;;
-      \?)				#Doesn't fucking work for some reason, its supposed to detect gibberish like "-klaneofbaog"
+      \?)				#Doesn't fucking work for some reason, its supposed to detect gibberish like "-klaneofbaog")
          echo "Invalid option"
          exit;;
     --add)
@@ -42,7 +45,7 @@ while true; do
         shift;
         RemoveFile
         exit;;
-    --)					#No idea whatsoever, I don't want to remove it though
+    --)					#No idea whatsoever, I don't want to remove it though)
         shift
         break
         ;;
@@ -54,3 +57,4 @@ echo -e "\nThis lets you add or remove the pizza-paper.sh file to your \$PATH fo
 echo -e "To run this file, you have to provide an argument as either\n"
 echo -e " ./pizza_path_partner -add   		Add the pizza-paper.sh file to /usr/local/bin/ to be able to execute it as \"pizzapaper [ARG]\" instead"
 echo -e " ./pizza_path_partner -remove		Removes the pizzapaper file from your \$PATH folder\n"
+echo -e "Make sure you are doing this in sudo, as it was made to modify your machine folders which are locked behind admin perms"
