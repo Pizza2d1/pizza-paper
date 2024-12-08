@@ -3,6 +3,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 VERSION=$"pizzapaper 1.2.7"	                #Tells the user the current version
 user=$(whoami)							                #Gets the username of the person calling the program so that it only affects that user's desktop
 WallpaperList=()						                #Needed so that that user can have custom wallpapers               
@@ -114,6 +115,9 @@ fi
 WallpaperList=()						#Needed so that that user can have custom wallpapers
 =======
 VERSION=$"pizzapaper 1.1.5"				#Tells the user the version
+=======
+VERSION=$"pizzapaper 1.2.0"				#Tells the user the version
+>>>>>>> 47c7cb9 (Update pizza-paper.sh)
 user=$(whoami)							      #Gets the username of the person calling the program so that it only affects that user's desktop
 WallpaperList=()						      #Needed so that that user can have custom wallpapers
 >>>>>>> 3a0bfea (Major update)
