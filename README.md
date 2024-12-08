@@ -1,4 +1,4 @@
-# pizza-paper version 1.1.4
+# pizza-paper version 1.2.0
 A wallpaper switching bash script that I made to try and learn some bash (because I think Ill use it in future careers) and because I wanted it to be customizable to me, I use linux btw
 
 # How to use
@@ -7,4 +7,11 @@ If you are in a weird version of linux (looking at you Ethan) you may need to in
 Right now it only works for gnome versions of linux, to find out if yours is gnome, run "echo $XDG_CURRENT_DESKTOP" in terminal
 
 # Make sure you are not running it as root (sudo)
-Unless you want to use path-adder.sh (which is completely optional)
+Unless you want to use path-adder.sh, which is completely optional for small QOL changes
+
+# Will add these necessary directories and files needed to run
+(These will NOT delete your current directory files if you already have these directories, don't worry)
+DIRECTORY /home/USERNAME/Pictures                   #Storing pizza-papers
+DIRECTORY /home/USERNAME/Pictures/pizza-papers      #Storing custom and sample wallpaper image files
+DIRECTORY /home/USERNAME/Documents                  #Storing pizza-papers.txt
+FILE /home/USERNAME/Documents/pizza-papers.txt      #Storing custom wallpaper paths and names
