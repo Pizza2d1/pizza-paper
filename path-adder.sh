@@ -14,7 +14,7 @@ AddFile (){
     if test -f */pizzapaper; then
       cp ./pizza-paper.sh /usr/local/bin/pizzapaper
     else
-      cp ./pizzapaper_testing /usr/local/bin/pizzapaper
+      cp ./pizzapaper_testing.sh /usr/local/bin/pizzapaper
     fi
   else
     echo "pizzapaper is already in the path directory: /usr/local/bin/"
@@ -57,3 +57,4 @@ echo -e "\nThis lets you add or remove the pizza-paper.sh file to your \$PATH fo
 echo -e "To run this file, you have to provide an argument as either\n"
 echo -e " ./pizza_path_partner -add   		Add the pizza-paper.sh file to /usr/local/bin/ to be able to execute it as \"pizzapaper [ARG]\" instead"
 echo -e " ./pizza_path_partner -remove		Removes the pizzapaper file from your \$PATH folder\n"
+echo -e "Make sure you are doing this in sudo, as it was made to modify your machine folders which are locked behind admin perms"
