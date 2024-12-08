@@ -1,3 +1,6 @@
+#Can be used to copy pizza-paper.sh to one of your PATH folders, mainly so that you don't have to be in a specific directory to use it and I don't like it ending with .sh (github requires it)
+#YOU DO NOT NEED TO RUN THIS, IT IS COMPLETELY **OPTIONAL** AND IS ONLY FOR MILD CONVENIENCE
+
 RemoveFile (){
   if test -f /usr/local/bin/pizzapaper; then		#If pizzapaper is found in the path file, then it will delete it
     rm /usr/local/bin/pizzapaper
@@ -31,7 +34,7 @@ while true; do
       -r)
          RemoveFile
          exit;;
-      \?)				#Doesn't fucking work for some reason, its supposed to detect gibberish like "-klaneofbaog"
+      \?)				#Doesn't fucking work for some reason, its supposed to detect gibberish like "-klaneofbaog")
          echo "Invalid option"
          exit;;
     --add)
@@ -42,7 +45,7 @@ while true; do
         shift;
         RemoveFile
         exit;;
-    --)					#No idea whatsoever, I don't want to remove it though
+    --)					#No idea whatsoever, I don't want to remove it though)
         shift
         break
         ;;
