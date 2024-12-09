@@ -28,6 +28,7 @@ Unless you want to use path-adder.sh (which is completely optional)
 Unless you want to use path-adder.sh, which is completely optional for small QOL changes
 
 # Will add these necessary directories and files needed to run
+<<<<<<< HEAD
 (These will NOT delete your current directory files if you already have these directories, don't worry)
 <<<<<<< HEAD
 DIRECTORY /home/USERNAME/Pictures                   #Storing pizza-papers
@@ -36,6 +37,9 @@ DIRECTORY /home/USERNAME/Documents                  #Storing pizza-papers.txt
 FILE /home/USERNAME/Documents/pizza-papers.txt      #Storing custom wallpaper paths and names
 >>>>>>> 9b603a9 (Update README.md)
 =======
+=======
+(These will NOT delete your current directory files, if you already have these directories, don't worry)
+>>>>>>> f2f0b01 (Update README.md)
 
 DIRECTORY /home/USERNAME/Pictures------------------------#Storing pizza-papers
 
