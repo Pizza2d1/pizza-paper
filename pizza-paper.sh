@@ -825,10 +825,14 @@ function Trains_Wallpaper (){	      #Sets the wallpaper to the inside of a autis
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #Lists the different options that the user can choose from, "hmast" is for individual letters options like "-h" and "-m"
 options=$(getopt -o hmast,help,mountain,astolfo,sunglasses,train --long "add,select,remove,sample,settings,help,version,normal,rotate" -- "$@")
 =======
 #Lists the different options that the user can choose from, "aAcdhr" is for individual letters btw
+=======
+#Lists the different options that the user can choose from, "hmast" is for individual letters options like "-h" and "-m"
+>>>>>>> b0c5079 (Update pizza-paper.sh)
 options=$(getopt -o hmast,mountain,astolfo,sunglasses,train --long "add,select,feature,help,version" -- "$@")
 >>>>>>> 3a0bfea (Major update)
 [ $? -eq 0 ] || {
@@ -939,9 +943,6 @@ while true; do
            echo -e "You must run \"$ProgName --feature\" to download these files"
          fi
          exit;;
-      -r)				            #Stupid fucking function, DONT USE THIS, it ruined my life and gave me AIDS)
-         RotateWallpaper
-         exit;;
       \?)				            #Doesn't fucking work for some reason, its supposed to detect gibberish like "-klaneofbaog")
          echo "Invalid option"
          exit;;
@@ -950,7 +951,7 @@ while true; do
         shift;
         if [[ $2 == *"https"* ]] && [[ $2 == *".jpg"* || $2 == *".jpeg"* || $2 == *".png"* ]]; then   #Will only accept URLs with https and valid image file extensions
           if [[  ${WallpaperList[@]} != *"$2"* ]]; then					                                      #Checks to make sure that PART of $fileL is nowhere in the WallpaperList array
-            feh $2 -E 128 -y 128								                                                      #Show the new wallpaper in a -E (height) 128 px and -y (width) 128 px (yes they made -y be width)
+            #feh $2 -E 128 -y 128								                                                      #Show the new wallpaper in a -E (height) 128 px and -y (width) 128 px (yes they made -y be width)
             cd /home/pizza2d1/Pictures/pizza-papers/ && { curl -O "$2" ; cd -; }                      #Downloads the URL image to the pizza-papers directory
             echo "$2" >> /home/$user/Documents/pizzapapers.txt
           else
