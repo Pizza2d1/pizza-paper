@@ -10,7 +10,7 @@ Right now it only works for gnome versions of linux, to find out if yours is gno
 Unless you want to use path-adder.sh, which is completely optional for small QOL changes
 
 # Will add these necessary directories and files needed to run
-(These will NOT delete your current directory files if you already have these directories, don't worry)
+(These will NOT delete your current directory files, if you already have these directories, don't worry)
 
 DIRECTORY /home/USERNAME/Pictures------------------------#Storing pizza-papers
 
