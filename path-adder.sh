@@ -1,8 +1,8 @@
 #Can be used to copy pizza-paper.sh to one of your PATH folders, mainly so that you don't have to be in a specific directory to use it and I don't like it ending with .sh (github requires it)
-#YOU DO NOT NEED TO RUN THIS, IT IS COMPLETELY **OPTIONAL** AND IS ONLY FOR MILD CONVENIENCE
+#YOU DO NOT NEED TO RUN THIS, IT IS COMPLETELY **OPTIONAL** AND IS ONLY FOR MILD CONVENIENCE AND DEVELOPMENT
 
 RemoveFile (){
-  if test -f /usr/local/bin/pizzapaper; then		#If pizzapaper is found in the path file, then it will delete it
+  if test -f /usr/local/bin/pizzapaper; then		  #If pizzapaper is found in the path file, then it will delete it
     rm /usr/local/bin/pizzapaper
   else
     echo "pizzapaper was not found in that directory, it may have already been removed"
@@ -14,13 +14,31 @@ AddFile (){
     if test -f */pizzapaper; then
       cp ./pizza-paper.sh /usr/local/bin/pizzapaper
     else
-      cp ./pizzapaper_testing.sh /usr/local/bin/pizzapaper
+      cp ./pizzapaper_testing.sh /usr/local/bin/pizzapaper  #This is my personal testing/dev file, you don't need to worry about it
     fi
   else
     echo "pizzapaper is already in the path directory: /usr/local/bin/"
   fi
 }
-options=$(getopt -o ar,add,remove --long "add,remove" -- "$@")
+
+####DEV TOOLS####
+ResetPapers (){
+  rm /home/pizza2d1/Documents/pizzapapers.txt
+  touch /home/pizza2d1/Documents/pizzapapers.txt
+}
+ResetFiles (){
+  rm -rf /home/pizza2d1/Pictures/pizza-papers
+  mkdir /home/pizza2d1/Pictures/pizza-papers
+}
+ResetSettings (){
+  touch /home/pizza2d1/Pictures/pizza-papers/settings.log
+  rm /home/pizza2d1/Pictures/pizza-papers/settings.log
+  touch /home/pizza2d1/Pictures/pizza-papers/settings.log
+  echo "Enable CLI Selection:  0     #Lets the user use CLI instead of the default GUI selectors" > /home/pizza2d1/Pictures/pizza-papers/settings.log
+  echo "Default Function:      1     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)" >> /home/pizza2d1/Pictures/pizza-papers/settings.log
+}
+
+options=$(getopt -o ar,add,remove --long "add,remove,retard" -- "$@")
 [ $? -eq 0 ] || { 
     echo "Incorrect options provided"
     exit 1
@@ -34,7 +52,7 @@ while true; do
       -r)
          RemoveFile
          exit;;
-      \?)				#Doesn't fucking work for some reason, its supposed to detect gibberish like "-klaneofbaog")
+      \?)
          echo "Invalid option"
          exit;;
     --add)
@@ -45,7 +63,19 @@ while true; do
         shift;
         RemoveFile
         exit;;
-    --)					#No idea whatsoever, I don't want to remove it though)
+    --retard) #users don't use this, fuck off)
+        shift;
+        echo "Resetting pizzapaper contents"
+        sleep 1
+        ResetPapers
+        echo "Resetting wallpapers"
+        sleep 1
+        ResetFiles
+        echo "Resetting settings"
+        sleep 1
+        ResetSettings
+        exit;;
+    --)
         shift
         break
         ;;
