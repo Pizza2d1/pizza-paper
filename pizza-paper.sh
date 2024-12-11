@@ -1,13 +1,13 @@
 #This is my own little thing that I made to switch up desktop wallpapers, it sucks but I think it works best for me
 #To get instructions on how to run this you can just execute it or look on github for "How to use"
 
-VERSION=$"pizzapaper 1.2.1 unstable"				#Tells the user the version
+VERSION=$"pizzapaper 1.2.2 unstable"				#Tells the user the version
 user=$(whoami)							                #Gets the username of the person calling the program so that it only affects that user's desktop
 WallpaperList=()						                #Needed so that that user can have custom wallpapers
 PAPERS=/home/$user/Documents/pizzapapers.txt
 for LINE in $(cat "$PAPERS"); do
   WallpaperList+=($LINE)
-done
+done                   
 #I like these ones better ^^^^^ so they get to be at the top
 
 #Necessary checks needed for redundancy and being more user-friendly
@@ -16,12 +16,12 @@ if [ -d "/home/pizza2d1" ]; then				                                            
 else
   IAMGOD=false
 fi
-if [ -f /usr/local/bin/pizzapaper ]; then			                                      #ProgName will be used to swap between "pizza-paper.sh" and "pizzapaper" depending on what the user has installed for convenience
+if [ -f /usr/local/bin/pizzapaper ]; then			                                        #ProgName will be used to swap between "pizza-paper.sh" and "pizzapaper" depending on what the user has installed for convenience
   ProgName="pizzapaper"                             
 elif [ -f ./pizza-paper.sh ]; then
   ProgName="./pizza-paper.sh"
 fi
-if [ -f /home/$user/Pictures/pizza-papers/TRAINS.jpg ]; then                         #Checks to see if the user decided to download the included wallpapers (pizzapaper --feature)
+if [ -f /home/$user/Pictures/pizza-papers/TRAINS.jpg ]; then                          #Checks to see if the user decided to download the included wallpapers (pizzapaper --feature)
   ShortHelpFlag="|m|a|s|t"                                                            #Will display sample wallpaper options if the user has them downloaded
   SampleWallpaperStatus=""                                                            #Will NOT say something if the user has sample images
   YesYouHaveIt="(If you would like to delete them, use \"--sample remove\")"          #Will tell the user if they have the sample images if it detects them
@@ -57,23 +57,6 @@ fi
 
 
 #Main functions
-function Help_Options (){		                  #Gives the user instructions on how to use the program
-  echo -e "This is my first attempt at making a help thing so Im going to try to make it as helpful for you as it can be to me\n"
-  echo -e "$ProgName is a custom program that I made as a passion project to learn how to switch wallpapers in terminal, which eventually turned into a full passion project on learning how a small area of display bash-scripting works. Im also attempting to learn git commands alongside this so that I might become a better programmer and because I think it's interesting\n"
-  echo -e "To use this command you must do:\n  $ProgName [ARG]"
-  echo -e "  E.G. \"$ProgName -h\", \"$ProgName --feature\", or \"$ProgName --add\"\n\n"
-  echo -e "   -h                 Gives the user a simple idea of what options to choose\n"
-  echo -e "   -m | -mountain     Switches wallpaper to a mountainside           $SampleWallpaperStatus\n"
-  echo -e "   -a | -astolfo      Switches wallpaper to Astolfo                  $SampleWallpaperStatus\n"
-  echo -e "   -s | -sunglasses   Switches wallpaper to sunglasses on a beach    $SampleWallpaperStatus\n"
-  echo -e "   -t | -train        Switches wallpaper to a picture of a train     $SampleWallpaperStatus\n"
-  echo -e "  --sample            Will download sample images $YesYouHaveIt\n"
-  echo -e "  --add               Lets you add custom wallpapers to a text file that you can select from (in the future), USAGE: --add | --add [Image URL]\n"
-  echo -e "  --select            Lets you select what wallpaper you want to use out of your custom wallpapers that you have added, USAGE: --select | --select [wallpaper number]\n"
-  echo -e "  --version           Echos the current $ProgName version\n"
-  echo -e "  --help              Will display this, a much more detailed explanation on how to use this program and its arguments\n\n"
-}
-
 function Less_Help (){			                  #Runs when there are no arguments and whent the user inputs "pizzapaper -h"
   echo -e "\nPick which argument you want to use with \"$ProgName [-h$ShortHelpFlag | --help|add|select|feature|version]\"\n (The --help option may be more helpful)\n"
   if [[ ! $ProgName == *"pizzapaper"* ]]; then
@@ -88,6 +71,24 @@ function Less_Help (){			                  #Runs when there are no arguments and
     echo "--remove                       Opens image deletion gui"
     echo -e "--sample remove                Deletes sample images\n"
   fi
+}
+
+function Help_Options (){		                  #Gives the user instructions on how to use the program
+  echo -e "This is my first attempt at making a help thing so Im going to try to make it as helpful for you as it can be to me\n"
+  echo -e "$ProgName is a custom program that I made as a passion project to learn how to switch wallpapers in terminal, which eventually turned into a full passion project on learning how a small area of display bash-scripting works. Im also attempting to learn git commands alongside this so that I might become a better programmer and because I think it's interesting\n"
+  echo -e "To use this command you must do:\n  $ProgName [ARG]"
+  echo -e "  E.G. \"$ProgName -h\", \"$ProgName --sample\", or \"$ProgName --add\"\n\n"
+  echo -e "   -h                 Gives the user a simple idea of what options to choose\n"
+  echo -e "   -m | -mountain     Switches wallpaper to a mountainside           $SampleWallpaperStatus\n"
+  echo -e "   -a | -astolfo      Switches wallpaper to Astolfo                  $SampleWallpaperStatus\n"
+  echo -e "   -s | -sunglasses   Switches wallpaper to sunglasses on a beach    $SampleWallpaperStatus\n"
+  echo -e "   -t | -train        Switches wallpaper to a picture of a train     $SampleWallpaperStatus\n"
+  echo -e "  --sample            Will download sample images $YesYouHaveIt\n"
+  echo -e "  --add               Lets you add custom wallpapers to a text file that you can select from (in the future), USAGE: --add | --add [Image URL]\n"
+  echo -e "  --select            Lets you select what wallpaper you want to use out of your custom wallpapers that you have added, USAGE: --select | --select [wallpaper number]\n"
+  echo -e "  --settings          Lets you select different settings that might be more useful to you\n"
+  echo -e "  --version           Echos the current $ProgName version\n"
+  echo -e "  --help              Will display this, a much more detailed explanation on how to use this program and its arguments\n\n"
 }
 
 function AddWallpaper (){                     #Will let the user add a wallpaper from their computer files
@@ -139,17 +140,18 @@ function SelectWallpaper (){								  #The user chooses a wallpaper that they th
     echo -e "\nYou do not have any custom wallpapers, you can add some buy using $ProgName --add\n"
     exit;
   fi
-  echo "  0   Remove A Wallpaper"							  #A new option that will be made useful later to remove custom wallpapers from the list #########################
+  echo -e "\n  0   Remove A Wallpaper"							  #A new option that will be made useful later to remove custom wallpapers from the list #########################
   Num=1
   for LINE in ${WallpaperList[@]}; do           #A loop that encompasses ALL items in the WallpaperList array
     ImageName="$(basename $LINE)"               #Takes the substring value of the image by removing the parent directories from the string
     echo "  $Num   $ImageName"								  #Displays the wallpaper FILE name and its number selection choice
     ((Num+=1))
   done
+  echo "" #Just a spacer
   read -p "Which wallpaper would you like to choose?: " uinput				#Has the user input a selection in the terminal #REFERENCE#
   re='^[0-9]+$'
   if [[ $uinput == "0" ]]; then                 #Will check that the user wanted to delete a wallpaper
-    echo -e "\n\n  0   Exit"
+    echo -e "\n  0   Exit"
     Num=1
     for LINE in ${WallpaperList[@]}; do
       ImageName="$(basename $LINE)"
@@ -205,11 +207,97 @@ function RemoveWallpaper (){                  #The user can choose what wallpape
   fi
 }
 
-#function Settings (){                        #Will allow the user to change settings in the CLI to let them determine default function that runs when the user does not provide an argument (current: LessHelp)
-#  read foo
-#  echo $foo
-#}
-###########################################
+function Settings (){                        #Will allow the user to change settings in the CLI to let them determine default function that runs when the user does not provide an argument (current: LessHelp)
+  #read uinput   #Takes the argument the user inputted and makes it a variable called uinput
+  GetSettings
+  read -p "What setting do you want to change? [1/2]: " uinput
+  while [[ $uinput != "" ]]; do
+    if [[ $uinput == "1" ]]; then
+      Setting1
+      GetSettings
+    elif [[ $uinput == "2" ]]; then
+      Setting2
+      GetSettings
+    else
+      echo "Invalid input"
+      exit
+    fi
+    read -p "What setting do you want to change? [1/2]: " uinput
+  done
+  echo "Exiting"
+  exit;
+
+}
+##########################################
+
+
+#Smaller functions that are only for clean code and ease of development
+function GetSettings() {  #Super annoying, I had to look up quite a bit just to figure it out
+  SettingsArray=()
+  re='^[0-9]+$'
+  for LINE in $(cat /home/$user/Pictures/pizza-papers/settings.log); do #Gets all number values in settings files (numbers are the data being used)
+    if [[ $LINE =~ $re ]]; then
+      SettingsArray+=($LINE)
+    fi
+  done
+
+  #Will display settings and what value they are
+  if [ -t 0 ]; then #Will check if a value has NOT been piped INTO the function, running [ -t 1 ] again will test if the function is being piped OUT of the function
+    EchoSettings="/home/$user/Pictures/pizza-papers/settings.log" #Gets all number values in settings files (numbers are the data being used)
+    while read -r LINE; do
+      printf "%s\n" "${LINE:0:24}" #{parameter:startingposition:offset}  Variable name, starts at 0, how many letters you want to encompass/read
+    done < $EchoSettings    #Will use the settings.log file as the input for the read -r operation
+    return
+  fi
+
+  read PipedValue #Since there WAS a piped value we can read it without the program getting softlocked and get a return value :3
+  if [[ $PipedValue == "WantCLI" ]]; then
+    echo ${SettingsArray[0]}
+  elif [[ $PipedValue == "Default" ]]; then
+    echo ${SettingsArray[1]}
+  else
+    echo "How did this happen"
+  fi
+}
+function Setting1 (){     #Will change the value of the first setting as a bit value 0/1
+  SETTING_NUMBER=1 #Use this to determine what setting is being changed
+
+  SettingsArray=()
+  re='^[0-9]+$'
+  for LINE in $(cat /home/$user/Pictures/pizza-papers/settings.log); do #Gets all number values in settings files (numbers are the data being used)
+    if [[ $LINE =~ $re ]]; then
+      SettingsArray+=($LINE)
+    fi
+  done
+  SettingValue=${SettingsArray[ (($SETTING_NUMBER-1)) ]}
+  if [[ $SettingValue == "1" ]]; then
+    echo "Enable CLI Selection:  0     #Lets the user use CLI instead of the default GUI selectors" > /home/$user/Pictures/pizza-papers/settings.log
+    echo "Default Function:      ${SettingsArray[1]}     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)" >> /home/$user/Pictures/pizza-papers/settings.log
+  else
+    echo "Enable CLI Selection:  1     #Lets the user use CLI instead of the default GUI selectors" > /home/$user/Pictures/pizza-papers/settings.log
+    echo "Default Function:      ${SettingsArray[1]}     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)" >> /home/$user/Pictures/pizza-papers/settings.log
+  fi
+}
+function Setting2 (){     #Will change the value as an iterable value 1>2>3>4>1>2>3>4...
+  SETTING_NUMBER=2 #Use this to determine what setting is being changed
+
+  SettingsArray=()
+  re='^[0-9]+$'
+  for LINE in $(cat /home/$user/Pictures/pizza-papers/settings.log); do #Gets all number values in settings files (numbers are the data being used)
+    if [[ $LINE =~ $re ]]; then
+      SettingsArray+=($LINE)
+    fi
+  done
+  SettingValue=${SettingsArray[ (($SETTING_NUMBER-1)) ]}
+  if [[ $SettingValue == "4" ]]; then
+    echo "Enable CLI Selection:  ${SettingsArray[0]}     #Lets the user use CLI instead of the default GUI selectors" > /home/$user/Pictures/pizza-papers/settings.log
+    echo "Default Function:      1     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)" >> /home/$user/Pictures/pizza-papers/settings.log
+  else
+    echo "Enable CLI Selection:  ${SettingsArray[0]}     #Lets the user use CLI instead of the default GUI selectors" > /home/$user/Pictures/pizza-papers/settings.log
+    echo "Default Function:      $[$SettingValue+1]     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)" >> /home/$user/Pictures/pizza-papers/settings.log
+  fi
+}
+##########################################
 
 
 #For setting the SAMPLE wallpapers, the user might either have "picture-uri-dark" or "picture-uri" being displayed, so its best to just set both of them.-
@@ -294,7 +382,7 @@ while true; do
         exit;;
     --select)				        #Lets the user select one of their custom wallpapers in a numbered list along with displaying the choice's names)
         shift;
-        if [[ $2 == "secret" ]]; then
+        if [[ $(echo "WantCLI" | GetSettings) == "0" ]]; then #If the user chose to have a CLI instead of GUI in settings, it will do that instead
           if test -e /home/$user/Pictures/pizza-papers/; then
             touch TEMPLIST.txt
             feh -t /home/$user/Pictures/pizza-papers/ -E 256 -y 216 --action 'echo %n >> ./TEMPLIST.txt'  #Opens a feh GUI in "thumbnail" mode so that that user can select a wallpaper from their list that they can see/select from
@@ -361,8 +449,8 @@ while true; do
         exit;;
     --settings)
         shift;
-        echo "A in-progress function that will allow the user to save settings for ease-of-access"
-        #echo $2 | Settings  #Pipes the argument the user inputs into the Settings function (I just barely figured this out, might have to rewrite 40% of code)
+        echo "Default functions: (1: LessHelp, 2: MoreHelp, 3: AddWallpaper, 4: SelectWallpaper)"
+        Settings
         exit;;
     --help)				          #Will activate when pizzapaper --help is used, the BETTER option for getting info)
         shift;	            #I don't know why shift is used tbh, but I'm afraid it will break if I remove it
@@ -380,11 +468,19 @@ while true; do
     shift
 done
 
-######################Add settings in a log file in pizzapapers (dir) to make it so you can switch to selecting a wallpaper without needing arguments
-
-#if [ -f /home/$user/Pictures/pizza-papers/settings.log ]; then
-#  echo "Bingus"
-#else
-Less_Help   #Will run when the user does not provide an argument to give them options
-#fi
-
+#Will decide what function will be used when the user only does "./pizza-paper.sh" or "pizzapaper", the default is Less_Help
+DefaultFunction=$(echo "Default" | GetSettings)
+case "$DefaultFunction" in  #case will check to see if $DefaultFunction fits the same value of any of the options
+    1)
+        Less_Help
+        exit;;
+    2)
+        Help_Options
+        exit;;
+    3)
+        AddWallpaper
+        exit;;
+    4)
+        SelectWallpaper
+        exit;;
+esac
