@@ -1,6 +1,8 @@
 #Can be used to copy pizza-paper.sh to one of your PATH folders, mainly so that you don't have to be in a specific directory to use it and I don't like it ending with .sh (github requires it)
 #YOU DO NOT NEED TO RUN THIS, IT IS COMPLETELY **OPTIONAL** AND IS ONLY FOR MILD CONVENIENCE AND DEVELOPMENT
 
+user="pizza2d1"
+
 RemoveFile (){
   if test -f /usr/local/bin/pizzapaper; then		  #If pizzapaper is found in the path file, then it will delete it
     rm /usr/local/bin/pizzapaper
@@ -21,17 +23,18 @@ AddFile (){
   fi
 }
 
-####DEV TOOLS####
+####DEV TOOLS#### Note: all files that are deleted will be remade when running ./pizzapaper // pizza-paper.sh as the actual user
 ResetPapers (){
-  rm /home/pizza2d1/Documents/pizzapapers.txt
-  touch /home/pizza2d1/Documents/pizzapapers.txt
+  rm /home/$user/Documents/pizzapapers.txt
 }
 ResetFiles (){
-  rm -rf /home/pizza2d1/Pictures/pizza-papers
-  mkdir /home/pizza2d1/Pictures/pizza-papers
+  rm -rf /home/$user/Pictures/pizza-papers
+}
+ResetSettings (){
+  rm /home/$user/Pictures/pizza-papers/settings.log
 }
 
-options=$(getopt -o ar,add,remove --long "add,remove,retard" -- "$@")
+options=$(getopt -o ar,add,remove --long "add,remove,retard,copy" -- "$@")
 [ $? -eq 0 ] || { 
     echo "Incorrect options provided"
     exit 1
@@ -59,8 +62,20 @@ while true; do
     --retard) #users don't use this, fuck off)
         shift;
         echo "Resetting pizzapaper contents"
+        sleep 0.5
         ResetPapers
+        echo "Resetting wallpapers"
+        sleep 0.5
         ResetFiles
+        echo "Resetting settings"
+        sleep 0.5
+        ResetSettings
+        gsettings set org.gnome.desktop.background picture-uri "file:///usr/share/backgrounds/warty-final-ubuntu.png"
+        gsettings set org.gnome.desktop.background picture-uri-dark "file:///usr/share/backgrounds/warty-final-ubuntu.png"
+        exit;;
+    --copy)
+        shift;
+        cp /home/pizza2d1/pizzapaper_testing.sh /home/pizza2d1/pizza-paper.sh
         exit;;
     --)
         shift
