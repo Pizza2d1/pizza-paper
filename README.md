@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # pizza-paper ver 1.2.7 stable
 The usually unstable version of pizza-paper that I keep here in case I want to work on it somewhere else or I accidentally delete the main files that I've been working on
 ___
@@ -17,11 +18,16 @@ Most likely the last version that I work on unless I care enough
 =======
 # pizza-paper version 1.2.2
 >>>>>>> a82fb30 (Update README.md)
+=======
+# pizza-paper version 1.2.3
+>>>>>>> bd8cd1d (Update README.md)
 A wallpaper switching bash script that I made to try and learn some bash (because I think Ill use it in future careers) and because I wanted it to be customizable to me, I use linux btw
 
 # How to use
 All functionality can be done with pizza-paper.sh and does not require any additional packages to be downloaded (I don't think)
-If you are in a weird version of linux (looking at you Ethan) you may need to install something from this list: [zenity, gsettings]
+
+If you are in a non-ubuntu version of linux you may need to install packages from this list: [feh, zenity, gsettings]
+
 Right now it only works for gnome versions of linux, to find out if yours is gnome, run "echo $XDG_CURRENT_DESKTOP" in terminal
 
 # Make sure you are not running it as root (sudo)
