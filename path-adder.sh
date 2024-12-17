@@ -5,6 +5,7 @@
 
 user="pizza2d1"
 
+<<<<<<< HEAD
 RemoveFile (){
   if test -f /usr/custom_paths/pizzapaper; then		  #If pizzapaper is found in the path file, then it will delete it
     rm /usr/custom_paths/pizzapaper
@@ -18,6 +19,8 @@ RemoveFile (){
 #YOU DO NOT NEED TO RUN THIS, IT IS COMPLETELY **OPTIONAL** AND IS ONLY FOR MILD CONVENIENCE AND DEVELOPMENT
 
 >>>>>>> 3a0bfea (Major update)
+=======
+>>>>>>> 4d4fc3f (New Settings)
 RemoveFile (){
   if test -f /usr/local/bin/pizzapaper; then		  #If pizzapaper is found in the path file, then it will delete it
     rm /usr/local/bin/pizzapaper
@@ -70,25 +73,23 @@ options=$(getopt -o ar,add,remove --long "add,remove" -- "$@")
 >>>>>>> bc8de37 (More features and new file)
 =======
 
-####DEV TOOLS####
+####DEV TOOLS#### Note: all files that are deleted will be remade when running ./pizzapaper // pizza-paper.sh as the actual user
 ResetPapers (){
-  rm /home/pizza2d1/Documents/pizzapapers.txt
-  touch /home/pizza2d1/Documents/pizzapapers.txt
+  rm /home/$user/Documents/pizzapapers.txt
 }
 ResetFiles (){
-  rm -rf /home/pizza2d1/Pictures/pizza-papers
-  mkdir /home/pizza2d1/Pictures/pizza-papers
+  rm -rf /home/$user/Pictures/pizza-papers
 }
 ResetSettings (){
-  touch /home/pizza2d1/Pictures/pizza-papers/settings.log
-  rm /home/pizza2d1/Pictures/pizza-papers/settings.log
-  touch /home/pizza2d1/Pictures/pizza-papers/settings.log
-  echo "Enable CLI Selection:  0     #Lets the user use CLI instead of the default GUI selectors" > /home/pizza2d1/Pictures/pizza-papers/settings.log
-  echo "Default Function:      1     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)" >> /home/pizza2d1/Pictures/pizza-papers/settings.log
+  rm /home/$user/Pictures/pizza-papers/settings.log
 }
 
+<<<<<<< HEAD
 options=$(getopt -o ar,add,remove --long "add,remove,retard" -- "$@")
 >>>>>>> 6d0c079 (MAJOR UPDATE)
+=======
+options=$(getopt -o ar,add,remove --long "add,remove,retard,copy" -- "$@")
+>>>>>>> 4d4fc3f (New Settings)
 [ $? -eq 0 ] || { 
     echo "Incorrect options provided"
     exit 1
@@ -161,14 +162,20 @@ while true; do
     --retard) #users don't use this, fuck off)
         shift;
         echo "Resetting pizzapaper contents"
-        sleep 1
+        sleep 0.5
         ResetPapers
         echo "Resetting wallpapers"
-        sleep 1
+        sleep 0.5
         ResetFiles
         echo "Resetting settings"
-        sleep 1
+        sleep 0.5
         ResetSettings
+        gsettings set org.gnome.desktop.background picture-uri "file:///usr/share/backgrounds/warty-final-ubuntu.png"
+        gsettings set org.gnome.desktop.background picture-uri-dark "file:///usr/share/backgrounds/warty-final-ubuntu.png"
+        exit;;
+    --copy)
+        shift;
+        cp /home/pizza2d1/pizzapaper_testing.sh /home/pizza2d1/pizza-paper.sh
         exit;;
     --)
 >>>>>>> 6d0c079 (MAJOR UPDATE)

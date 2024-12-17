@@ -5,6 +5,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 VERSION=$"pizzapaper 1.2.7"	                #Tells the user the current version
 user=$(whoami)							                #Gets the username of the person calling the program so that it only affects that user's desktop
 WallpaperList=()						                #Needed so that that user can have custom wallpapers               
@@ -138,6 +139,12 @@ for LINE in $(cat "$PAPERS"); do
   WallpaperList+=($LINE)
 done                   
 >>>>>>> 6d0c079 (MAJOR UPDATE)
+=======
+VERSION=$"pizzapaper 1.2.3"	     	          #Tells the user the version
+user=$(whoami)							                #Gets the username of the person calling the program so that it only affects that user's desktop
+WallpaperList=()						                #Needed so that that user can have custom wallpapers               
+AMOUNT_OF_SETTINGS=3
+>>>>>>> 4d4fc3f (New Settings)
 #I like these ones better ^^^^^ so they get to be at the top
 
 #Necessary checks needed for redundancy and being more user-friendly
@@ -188,6 +195,10 @@ fi
 if [ ! -f "/home/$user/Documents/pizzapapers.txt" ]; then             #Will make a pizzapapers text file to list all the custom wallpapers (in path/to/image style) that the user adds
   touch /home/$user/Documents/pizzapapers.txt
 fi
+while read -r LINE; do
+  WallpaperList+=("$LINE")
+done  < "/home/$user/Documents/pizzapapers.txt"
+
 if [ ! -d "/home/$user/Pictures" ]; then                              #Makes a Pictures directory in case you are a little weird idiot that feels like they're better than everyone else, along with making a directory for custom wallpapers
   echo "wtf why don't you have a Pictures folder, making one now to store your custom wallpapers..."
   mkdir /home/$user/Pictures
@@ -199,6 +210,7 @@ if [ ! -f "/home/$user/Pictures/pizza-papers/settings.log" ]; then    #Creates a
   touch /home/$user/Pictures/pizza-papers/settings.log
   echo "Enable CLI Selection:  0     #Lets the user use CLI instead of the default GUI selectors" > /home/$user/Pictures/pizza-papers/settings.log
   echo "Default Function:      1     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)" >> /home/$user/Pictures/pizza-papers/settings.log
+  echo "Select when adding:    1     #When the user adds a new wallpaper it will automatically make it their wallpaper" >> /home/$user/Pictures/pizza-papers/settings.log
 fi
 ###########################################
 
@@ -306,9 +318,13 @@ function AddWallpaper (){                     #Will let the user add a wallpaper
   read -p "[1/2]: " uinput
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   AddToSet=$(echo "AddToSet" | GetSettings)
 =======
 >>>>>>> 6d0c079 (MAJOR UPDATE)
+=======
+  AddToSet=$(echo "AddToSet" | GetSettings)
+>>>>>>> 4d4fc3f (New Settings)
   if [[ $uinput == "1" || $uinput == *"ile"* ]]; then                                   #Checks to see if the user chose 1 or file/File
     echo "Select which file(s) you would like to add"                                   #Yes, you can select multiple files
     Files=$(zenity --file-selection --multiple)                                         #Opens file selection to choose image files
@@ -330,12 +346,21 @@ function AddWallpaper (){                     #Will let the user add a wallpaper
           cp "$fileL" /home/$user/Pictures/pizza-papers/                                  #Copies wallpaper file to pizza-papers so it can be selected in gui
 =======
     read -ra IndividualImages <<< "$Files" #Appends each file name into an array name IndividualImages
+    if [[ ${#IndividualImages[@]} == 1 ]] && [[ $AddToSet == "1" ]]; then
+      gsettings set org.gnome.desktop.background picture-uri "$IndividualImages"
+      gsettings set org.gnome.desktop.background picture-uri-dark "$IndividualImages"
+    fi
     for fileL in "${IndividualImages[@]}"; do   #For each image that the user selected...
-      if [[ $fileL == *".jpg"* || $fileL == *".jpeg"* || $fileL == *".png"* ]]; then  #Will only accept URLs with https and valid image file extensions
+      if [[ $fileL == *".jpg"* || $fileL == *".jpeg"* || $fileL == *".png"* ]] && [[ $fileL != *" "* ]]; then  #Will only accept URLs with https and valid image file extensions
         if [[  ${WallpaperList[@]} != *"$fileL"* ]]; then					                      #Checks to make sure that PART of $fileL is nowhere in the WallpaperList array
+<<<<<<< HEAD
           echo "$fileL" >> /home/$user/Documents/pizzapapers.txt
           cp $fileL /home/$user/Pictures/pizza-papers/                                  #Copies wallpaper file to pizza-papers so it can be selected in gui
 >>>>>>> 6d0c079 (MAJOR UPDATE)
+=======
+          printf "%s\n" "$fileL" >> /home/$user/Documents/pizzapapers.txt
+          cp "$fileL" /home/$user/Pictures/pizza-papers/                                  #Copies wallpaper file to pizza-papers so it can be selected in gui
+>>>>>>> 4d4fc3f (New Settings)
           echo "$(basename $fileL) has been added to your wallpapers"
         else
           echo "That wallpaper is already in your list of wallpapers"
@@ -394,6 +419,10 @@ function AddWallpaper (){
         cp $URL /home/$user/Pictures/pizza-papers/                                  #Copies wallpaper file to pizza-papers so it can be selected in gui
         echo "$URL" >> /home/$user/Documents/pizzapapers.txt
         echo "$(basename $URL) has been added to your wallpapers"
+        if [[ $AddToSet == "1" ]]; then
+          gsettings set org.gnome.desktop.background picture-uri /home/$user/Pictures/pizza-papers/$URL
+          gsettings set org.gnome.desktop.background picture-uri-dark /home/$user/Pictures/pizza-papers/$URL
+        fi
       else
         echo "That wallpaper is already in your list of wallpapers"
       fi
@@ -419,6 +448,7 @@ function SelectWallpaper (){								  #The user chooses a wallpaper that they th
   fi
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   echo -e "\n  0   Remove A Wallpaper"							  #A new option that will be made useful later to remove custom wallpapers from the list
 =======
   echo "  0   Remove A Wallpaper"							  #A new option that will be made useful later to remove custom wallpapers from the list #########################
@@ -426,6 +456,9 @@ function SelectWallpaper (){								  #The user chooses a wallpaper that they th
 =======
   echo -e "\n  0   Remove A Wallpaper"							  #A new option that will be made useful later to remove custom wallpapers from the list #########################
 >>>>>>> 6d0c079 (MAJOR UPDATE)
+=======
+  echo -e "\n  0   Remove A Wallpaper"							  #A new option that will be made useful later to remove custom wallpapers from the list
+>>>>>>> 4d4fc3f (New Settings)
   Num=1
   for LINE in ${WallpaperList[@]}; do           #A loop that encompasses ALL items in the WallpaperList array
     ImageName="$(basename $LINE)"               #Takes the substring value of the image by removing the parent directories from the string
@@ -481,6 +514,7 @@ function SelectWallpaper (){								  #The user chooses a wallpaper that they th
 =======
   if [[ $uinput =~ $re ]]; then								#Checks to see that the user's input is a number
     echo "$(basename ${WallpaperList[$uinput-1]}) is now your new wallpaper"
+    gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
     gsettings set org.gnome.desktop.background picture-uri-dark ${WallpaperList[ (($uinput-1)) ]}
 <<<<<<< HEAD
 >>>>>>> 3a0bfea (Major update)
@@ -534,24 +568,36 @@ function RemoveWallpaper (){                  #The user can choose what wallpape
         exit;
       fi
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4d4fc3f (New Settings)
       if [[ $SingleImage != *".jpg"* && $SingleImage != *".jpeg"* && $SingleImage != *".png"* ]]; then
         echo -e "\nyou have selected a invalid image, make sure it does not contain any white-spaces, to force remove invalid image you must have \"CLI Selection\" settings enabled and THEN delete it in $ProgName --selection\n"
         exit;
       fi
+<<<<<<< HEAD
 =======
 >>>>>>> 6d0c079 (MAJOR UPDATE)
+=======
+>>>>>>> 4d4fc3f (New Settings)
       read -p "Are you sure you want to delete $SingleImage? [y/N]: " UserConfimation  #If the user selects a wallpaper, it will ask for confirmation that they want to delete it and store the input as $UserConfirmation
       if [[ $UserConfimation == *"y"* ]]; then
         rm /home/$user/Pictures/pizza-papers/$SingleImage
         echo "Deleted $SingleImage"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4d4fc3f (New Settings)
         WallpaperList=( ${WallpaperList[@]/*"$SingleImage"*} )    #Will take out the wallpaper with the same name as what was selected so DONT HAVE IMAGES WITH SAME NAME, EVEN WITH DIFFERENT PATHS
         rm /home/$user/Documents/pizzapapers.txt                  #Resets the wallpaper list
         for LINE in ${WallpaperList[@]}; do
           echo $LINE >> /home/$user/Documents/pizzapapers.txt     #Creates and writes the new array to the new pizzapapers.txt
         done
+<<<<<<< HEAD
 =======
 >>>>>>> 6d0c079 (MAJOR UPDATE)
+=======
+>>>>>>> 4d4fc3f (New Settings)
       else
         echo "Did not delete $SingleImage"
       fi
@@ -579,7 +625,6 @@ function Settings (){                         #Will allow the user to change set
       Setting1        #Used for enabling CLI interface
 =======
 function Settings (){                        #Will allow the user to change settings in the CLI to let them determine default function that runs when the user does not provide an argument (current: LessHelp)
-  #read uinput   #Takes the argument the user inputted and makes it a variable called uinput
   DisplayCurrentDefault
   GetSettings
   echo "" #adds a spacer
@@ -607,6 +652,11 @@ function Settings (){                        #Will allow the user to change sett
 =======
       Setting2
 >>>>>>> 6d0c079 (MAJOR UPDATE)
+      DisplayCurrentDefault
+      GetSettings
+      echo "" #adds a spacer
+    elif [[ $uinput == "3" ]]; then
+      Setting3
       DisplayCurrentDefault
       GetSettings
       echo "" #adds a spacer
@@ -888,47 +938,42 @@ function GetSettings() {  #Super annoying, I had to look up quite a bit just to 
     echo ${SettingsArray[0]}
   elif [[ $PipedValue == "Default" ]]; then
     echo ${SettingsArray[1]}
+  elif [[ $PipedValue == "AddToSet" ]]; then
+    echo ${SettingsArray[2]}
   else
     echo "How did this happen"
   fi
 }
+
 function Setting1 (){     #Will change the value of the first setting as a bit value 0/1
   SETTING_NUMBER=1 #Use this to determine what setting is being changed
-
-  SettingsArray=()
+  SettingsValues=()
   re='^[0-9]+$'
   for LINE in $(cat /home/$user/Pictures/pizza-papers/settings.log); do #Gets all number values in settings files (numbers are the data being used)
     if [[ $LINE =~ $re ]]; then
-      SettingsArray+=($LINE)
+      SettingsValues+=($LINE)
     fi
   done
-  SettingValue=${SettingsArray[ (($SETTING_NUMBER-1)) ]}
-  if [[ $SettingValue == "1" ]]; then
-    echo "Enable CLI Selection:  0     #Lets the user use CLI instead of the default GUI selectors" > /home/$user/Pictures/pizza-papers/settings.log
-    echo "Default Function:      ${SettingsArray[1]}     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)" >> /home/$user/Pictures/pizza-papers/settings.log
-  else
-    echo "Enable CLI Selection:  1     #Lets the user use CLI instead of the default GUI selectors" > /home/$user/Pictures/pizza-papers/settings.log
-    echo "Default Function:      ${SettingsArray[1]}     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)" >> /home/$user/Pictures/pizza-papers/settings.log
-  fi
-}
-function Setting2 (){     #Will change the value as an iterable value 1>2>3>4>1>2>3>4...
-  SETTING_NUMBER=2 #Use this to determine what setting is being changed
 
-  SettingsArray=()
-  re='^[0-9]+$'
-  for LINE in $(cat /home/$user/Pictures/pizza-papers/settings.log); do #Gets all number values in settings files (numbers are the data being used)
-    if [[ $LINE =~ $re ]]; then
-      SettingsArray+=($LINE)
-    fi
-  done
-  SettingValue=${SettingsArray[ (($SETTING_NUMBER-1)) ]}
-  if [[ $SettingValue == "4" ]]; then
-    echo "Enable CLI Selection:  ${SettingsArray[0]}     #Lets the user use CLI instead of the default GUI selectors" > /home/$user/Pictures/pizza-papers/settings.log
-    echo "Default Function:      1     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)" >> /home/$user/Pictures/pizza-papers/settings.log
+  SettingsText=()
+  #Reads the individual lines of settings.log and puts it into an array
+  while read -r LINE; do
+    SettingsText+=("$LINE")
+  done  < "/home/$user/Pictures/pizza-papers/settings.log"
+  
+  #Switches the value of the first setting
+  if [[ ${SettingsValues[ (($SETTING_NUMBER-1)) ]} == "1" ]]; then
+    SettingsText[ (($SETTING_NUMBER-1)) ]="Enable CLI Selection:  0     #Lets the user use CLI instead of the default GUI selectors"
   else
-    echo "Enable CLI Selection:  ${SettingsArray[0]}     #Lets the user use CLI instead of the default GUI selectors" > /home/$user/Pictures/pizza-papers/settings.log
-    echo "Default Function:      $[$SettingValue+1]     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)" >> /home/$user/Pictures/pizza-papers/settings.log
+    SettingsText[ (($SETTING_NUMBER-1)) ]="Enable CLI Selection:  1     #Lets the user use CLI instead of the default GUI selectors"
   fi
+  
+  rm /home/$user/Pictures/pizza-papers/settings.log #Resets settings.log in a simple way
+  touch /home/$user/Pictures/pizza-papers/settings.log
+
+  for i in $(seq 0 $[$AMOUNT_OF_SETTINGS-1]); do
+    printf "%s\n" "${SettingsText[i]}" >> /home/$user/Pictures/pizza-papers/settings.log
+  done
 }
 function DisplayCurrentDefault (){
   SettingValue=$(echo "Default" | GetSettings)
@@ -945,6 +990,69 @@ function DisplayCurrentDefault (){
     echo "###########################################"
     echo -e "\nCurrent Default Function:    SelectWallpaper ----> Will prompt the user to select a wallpaper from their pizza-papers folder\n"
   fi
+}
+
+function Setting2 (){     #Will change the value as an iterable value 1>2>3>4>1>2>3>4...
+  SETTING_NUMBER=2 #Use this to determine what setting is being changed
+
+  SettingsValues=()
+  re='^[0-9]+$'
+  for LINE in $(cat /home/$user/Pictures/pizza-papers/settings.log); do #Gets all number values in settings files (numbers are the data being used)
+    if [[ $LINE =~ $re ]]; then
+      SettingsValues+=($LINE)
+    fi
+  done
+
+  SettingsText=()
+  #Reads the individual lines of settings.log and puts it into an array
+  while read -r LINE; do
+    SettingsText+=("$LINE")
+  done  < "/home/$user/Pictures/pizza-papers/settings.log"
+  
+  #Switches the value of the first setting
+  if [[ ${SettingsValues[ (($SETTING_NUMBER-1)) ]} == "4" ]]; then
+    SettingsText[ (($SETTING_NUMBER-1)) ]="Default Function:      1     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)"
+  else
+    SettingsText[ (($SETTING_NUMBER-1)) ]="Default Function:      $((${SettingsValues[ (($SETTING_NUMBER-1)) ]}+1))     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)"
+  fi
+  
+  rm /home/$user/Pictures/pizza-papers/settings.log #Resets settings.log in a simple way
+  touch /home/$user/Pictures/pizza-papers/settings.log
+
+  for i in $(seq 0 $[$AMOUNT_OF_SETTINGS-1]); do
+    printf "%s\n" "${SettingsText[i]}" >> /home/$user/Pictures/pizza-papers/settings.log
+  done
+}
+
+function Setting3 (){     #Will change the value of the first setting as a bit value 0/1
+  SETTING_NUMBER=3 #Use this to determine what setting is being changed
+  SettingsValues=()
+  re='^[0-9]+$'
+  for LINE in $(cat /home/$user/Pictures/pizza-papers/settings.log); do #Gets all number values in settings files (numbers are the data being used)
+    if [[ $LINE =~ $re ]]; then
+      SettingsValues+=($LINE)
+    fi
+  done
+
+  SettingsText=()
+  #Reads the individual lines of settings.log and puts it into an array
+  while read -r LINE; do
+    SettingsText+=("$LINE")
+  done  < "/home/$user/Pictures/pizza-papers/settings.log"
+  
+  #Switches the value of the first setting
+  if [[ ${SettingsValues[ (($SETTING_NUMBER-1)) ]} == "1" ]]; then
+    SettingsText[ (($SETTING_NUMBER-1)) ]="Select when adding:    0     #When the user adds a new wallpaper it will automatically make it their wallpaper"
+  else
+    SettingsText[ (($SETTING_NUMBER-1)) ]="Select when adding:    1     #When the user adds a new wallpaper it will automatically make it their wallpaper"
+  fi
+  
+  rm /home/$user/Pictures/pizza-papers/settings.log #Resets settings.log in a simple way
+  touch /home/$user/Pictures/pizza-papers/settings.log
+
+  for i in $(seq 0 $[$AMOUNT_OF_SETTINGS-1]); do
+    printf "%s\n" "${SettingsText[i]}" >> /home/$user/Pictures/pizza-papers/settings.log
+  done
 }
 ##########################################
 
@@ -980,15 +1088,18 @@ function Astolfo_Wallpaper (){		#Sets the wallpaper to that one pink faggot			#O
   echo Pink bitch has been deployed
 =======
 function Mountain_Wallpaper (){		  #Sets the wallpaper to a cool mountainside
+  gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
   gsettings set org.gnome.desktop.background picture-uri-dark file:///home/$user/Pictures/pizza-papers/mountains.jpg
   gsettings set org.gnome.desktop.background picture-uri file:///home/$user/Pictures/pizza-papers/mountains.jpg
 >>>>>>> 3a0bfea (Major update)
 }
 function Astolfo_Wallpaper (){		  #Sets the wallpaper to astolfo because I have a feeling my friends will open it
+  gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
   gsettings set org.gnome.desktop.background picture-uri-dark file:///home/$user/Pictures/pizza-papers/astolfo.jpg
   gsettings set org.gnome.desktop.background picture-uri file:///home/$user/Pictures/pizza-papers/astolfo.jpg
 }
 function Sunglasses_Wallpaper (){		#Sets the wallpaper to a beach photo with some sunglasses
+  gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
   gsettings set org.gnome.desktop.background picture-uri-dark file:///home/$user/Pictures/pizza-papers/sunglasses.jpeg
   gsettings set org.gnome.desktop.background picture-uri file:///home/$user/Pictures/pizza-papers/sunglasses.jpeg
 }
@@ -1007,6 +1118,7 @@ function Springfield_Wallpaper (){	#Sets the wallpaper to the springfield meme
 >>>>>>> 4657cf0 (Removed clutter and fixed user options)
 =======
 function Trains_Wallpaper (){	      #Sets the wallpaper to the inside of a autist's mind
+  gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
   gsettings set org.gnome.desktop.background picture-uri-dark file:///home/$user/Pictures/pizza-papers/TRAINS.jpg
   gsettings set org.gnome.desktop.background picture-uri file:///home/$user/Pictures/pizza-papers/TRAINS.jpg
 >>>>>>> 3a0bfea (Major update)
@@ -1179,11 +1291,25 @@ while true; do
         shift;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         if [[ $WallpaperList == "" ]]; then           #Will check to make sure that the user has entered any wallpapers yet
           echo -e "\nYou do not have any custom wallpapers, you can add some buy using $ProgName --add OR $ProgName --sample\n"
           exit;
 =======
         if [[ $(echo "WantCLI" | GetSettings) == "0" ]]; then #If the user chose to have a CLI instead of GUI in settings, it will do that instead
+=======
+        if [[ $WallpaperList == "" ]]; then           #Will check to make sure that the user has entered any wallpapers yet
+          echo -e "\nYou do not have any custom wallpapers, you can add some buy using $ProgName --add\n"
+          exit;
+        fi
+        re='^[0-9]+$'
+        if [[ $2 =~ $re ]]; then	#Checks to see that the users second argument is a number (if there even IS and argument)
+          INFILE=/home/$user/Documents/pizzapapers.txt
+          echo "$(basename ${WallpaperList[$2-1]}) is now your new wallpaper"
+          gsettings set org.gnome.desktop.background picture-uri-dark ${WallpaperList[ (($2-1)) ]}
+          gsettings set org.gnome.desktop.background picture-uri ${WallpaperList[ (($2-1)) ]}
+        elif [[ $(echo "WantCLI" | GetSettings) == "0" ]]; then #If the user chose to have a CLI instead of GUI in settings, it will do that instead
+>>>>>>> 4d4fc3f (New Settings)
           if test -e /home/$user/Pictures/pizza-papers/; then
             touch TEMPLIST.txt
             feh -t /home/$user/Pictures/pizza-papers/ -E 256 -y 216 --action 'echo %n >> ./TEMPLIST.txt'  #Opens a feh GUI in "thumbnail" mode so that that user can select a wallpaper from their list that they can see/select from
@@ -1201,6 +1327,7 @@ while true; do
             echo "You do not have any custom wallpapers"
             exit;
           fi
+<<<<<<< HEAD
 >>>>>>> 6d0c079 (MAJOR UPDATE)
         fi
         re='^[0-9]+$'
@@ -1231,6 +1358,8 @@ while true; do
 >>>>>>> 3a0bfea (Major update)
 =======
 >>>>>>> 6d0c079 (MAJOR UPDATE)
+=======
+>>>>>>> 4d4fc3f (New Settings)
         else
           SelectWallpaper
         fi
@@ -1331,6 +1460,8 @@ while true; do
             rm /home/$user/Pictures/pizza-papers/astolfo.jpg
             rm /home/$user/Pictures/pizza-papers/sunglasses.jpeg
             rm /home/$user/Pictures/pizza-papers/TRAINS.jpg
+            #gsettings set org.gnome.desktop.background picture-uri "file:///usr/share/backgrounds/warty-final-ubuntu.png"
+            #gsettings set org.gnome.desktop.background picture-uri-dark "file:///usr/share/backgrounds/warty-final-ubuntu.png"
           else
             echo -e "\nYou do not have any of the sample wallpapers downloaded\n"
           fi
@@ -1347,6 +1478,9 @@ while true; do
           mv /home/$user/Pictures/pizza-papers/il_1140xN.5095674952_4itq.jpg /home/$user/Pictures/pizza-papers/mountains.jpg
           mv /home/$user/Pictures/pizza-papers/photo-1473496169904-658ba7c44d8a /home/$user/Pictures/pizza-papers/sunglasses.jpeg #There was no image extension so I had to add it to make it work
           mv /home/$user/Pictures/pizza-papers/50703090_1022241357960569_4488694694989004800_n.jpg /home/$user/Pictures/pizza-papers/astolfo.jpg
+          if [ $? -ne 0 ]; then
+            echo -e "\nThird download failed; Make sure you are not on school wifi"
+          fi
           mv /home/$user/Pictures/pizza-papers/train_railway_forest_169685_1920x1080.jpg /home/$user/Pictures/pizza-papers/TRAINS.jpg
           #############################################################################################SETTINGS
         else
@@ -1380,6 +1514,7 @@ done
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 #I am the one and only
 if $IAMGOD; then
@@ -1393,9 +1528,13 @@ fi
 DefaultFunction=$(echo "Default" | GetSettings) #Will pipe (insert) a string containing "Default" into the GetSettings function, which will identify the string and return a certain value as a variable
 case "$DefaultFunction" in                      #case will check to see if $DefaultFunction fits the same value of any of the options
 =======
+=======
+#I am the one and only
+>>>>>>> 4d4fc3f (New Settings)
 if $IAMGOD; then
   echo -e "Dev commands:\n"
   echo "./path-partner --retard"
+  echo "./path-partner --copy"
 fi
 
 #Will decide what function will be used when the user only does "./pizza-paper.sh" or "pizzapaper", the default is Less_Help
