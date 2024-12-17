@@ -1,7 +1,7 @@
 #This is my own little thing that I made to switch up desktop wallpapers, it sucks but I think it works best for me
 #To get instructions on how to run this you can just execute it or look on github for "How to use"
 
-VERSION=$"pizzapaper 1.2.3 unstable"	     	#Tells the user the version
+VERSION=$"pizzapaper 1.2.4 unstable"	      #Tells the user the version
 user=$(whoami)							                #Gets the username of the person calling the program so that it only affects that user's desktop
 WallpaperList=()						                #Needed so that that user can have custom wallpapers               
 AMOUNT_OF_SETTINGS=3
@@ -40,10 +40,9 @@ fi
 if [ ! -f "/home/$user/Documents/pizzapapers.txt" ]; then             #Will make a pizzapapers text file to list all the custom wallpapers (in path/to/image style) that the user adds
   touch /home/$user/Documents/pizzapapers.txt
 fi
-PAPERS=/home/$user/Documents/pizzapapers.txt
-for LINE in $(cat "$PAPERS"); do
-  WallpaperList+=($LINE)
-done
+while read -r LINE; do
+  WallpaperList+=("$LINE")
+done  < "/home/$user/Documents/pizzapapers.txt"
 
 if [ ! -d "/home/$user/Pictures" ]; then                              #Makes a Pictures directory in case you are a little weird idiot that feels like they're better than everyone else, along with making a directory for custom wallpapers
   echo "wtf why don't you have a Pictures folder, making one now to store your custom wallpapers..."
@@ -107,14 +106,16 @@ function AddWallpaper (){                     #Will let the user add a wallpaper
       gsettings set org.gnome.desktop.background picture-uri-dark "$IndividualImages"
     fi
     for fileL in "${IndividualImages[@]}"; do   #For each image that the user selected...
-      if [[ $fileL == *".jpg"* || $fileL == *".jpeg"* || $fileL == *".png"* ]]; then  #Will only accept URLs with https and valid image file extensions
+      if [[ $fileL == *".jpg"* || $fileL == *".jpeg"* || $fileL == *".png"* ]] && [[ $fileL != *" "* ]]; then  #Will only accept URLs with https and valid image file extensions
         if [[  ${WallpaperList[@]} != *"$fileL"* ]]; then					                      #Checks to make sure that PART of $fileL is nowhere in the WallpaperList array
-          echo "$fileL" >> /home/$user/Documents/pizzapapers.txt
-          cp $fileL /home/$user/Pictures/pizza-papers/                                  #Copies wallpaper file to pizza-papers so it can be selected in gui
+          printf "%s\n" "$fileL" >> /home/$user/Documents/pizzapapers.txt
+          cp "$fileL" /home/$user/Pictures/pizza-papers/                                  #Copies wallpaper file to pizza-papers so it can be selected in gui
           echo "$(basename $fileL) has been added to your wallpapers"
         else
           echo "That wallpaper is already in your list of wallpapers"
         fi
+      elif [[ $fileL != "" ]]; then
+        echo "$(basename $fileL) is not a valid image file type"
       else
         echo "You did not make a selection or chose a invalid file type"
       fi
@@ -149,7 +150,7 @@ function SelectWallpaper (){								  #The user chooses a wallpaper that they th
     echo -e "\nYou do not have any custom wallpapers, you can add some buy using $ProgName --add\n"
     exit;
   fi
-  echo -e "\n  0   Remove A Wallpaper"							  #A new option that will be made useful later to remove custom wallpapers from the list #########################
+  echo -e "\n  0   Remove A Wallpaper"							  #A new option that will be made useful later to remove custom wallpapers from the list
   Num=1
   for LINE in ${WallpaperList[@]}; do           #A loop that encompasses ALL items in the WallpaperList array
     ImageName="$(basename $LINE)"               #Takes the substring value of the image by removing the parent directories from the string
@@ -199,6 +200,10 @@ function RemoveWallpaper (){                  #The user can choose what wallpape
     for SingleImage in $(cat ./TEMPLIST.txt); do
       if [[ $SingleImage == "" ]]; then
         echo "You did not select an image"
+        exit;
+      fi
+      if [[ $SingleImage != *".jpg"* && $SingleImage != *".jpeg"* && $SingleImage != *".png"* ]]; then
+        echo -e "\nyou have selected a invalid image, make sure it does not contain any white-spaces, to force remove invalid image you must have \"CLI Selection\" settings enabled and THEN delete it in $ProgName --selection\n"
         exit;
       fi
       read -p "Are you sure you want to delete $SingleImage? [y/N]: " UserConfimation  #If the user selects a wallpaper, it will ask for confirmation that they want to delete it and store the input as $UserConfirmation
@@ -286,6 +291,7 @@ function GetSettings() {  #Super annoying, I had to look up quite a bit just to 
     echo "How did this happen"
   fi
 }
+
 function Setting1 (){     #Will change the value of the first setting as a bit value 0/1
   SETTING_NUMBER=1 #Use this to determine what setting is being changed
   SettingsValues=()
@@ -497,7 +503,14 @@ while true; do
         elif [[ $(echo "WantCLI" | GetSettings) == "0" ]]; then #If the user chose to have a CLI instead of GUI in settings, it will do that instead
           if test -e /home/$user/Pictures/pizza-papers/; then
             touch TEMPLIST.txt
-            feh -t /home/$user/Pictures/pizza-papers/ -E 256 -y 216 --action 'echo %n >> ./TEMPLIST.txt'  #Opens a feh GUI in "thumbnail" mode so that that user can select a wallpaper from their list that they can see/select from
+            if [[ ${#WallpaperList[@]} -lt 8 ]]; then #If there are LESS THAN (-lt) 8 images in the WallpaperList array then feh will display the images larger for selection
+              FehImageHeight=256
+              FehImageWidth=216
+            else
+              FehImageHeight=128
+              FehImageWidth=108
+            fi
+            feh -t /home/$user/Pictures/pizza-papers/ -E $FehImageHeight -y $FehImageWidth --action 'echo %n >> ./TEMPLIST.txt'  #Opens a feh GUI in "thumbnail" mode so that that user can select a wallpaper from their list that they can see/select from
             FirstImage=$(head -n 1 ./TEMPLIST.txt)
             if [[ $FirstImage == "" ]]; then
               echo "You did not select an image"
@@ -548,11 +561,10 @@ while true; do
           mv /home/$user/Pictures/pizza-papers/il_1140xN.5095674952_4itq.jpg /home/$user/Pictures/pizza-papers/mountains.jpg
           mv /home/$user/Pictures/pizza-papers/photo-1473496169904-658ba7c44d8a /home/$user/Pictures/pizza-papers/sunglasses.jpeg #There was no image extension so I had to add it to make it work
           mv /home/$user/Pictures/pizza-papers/50703090_1022241357960569_4488694694989004800_n.jpg /home/$user/Pictures/pizza-papers/astolfo.jpg
-          if [ $? -ne 0 ]; then
+          if [ $? -ne 0 ]; then #Makes sure that the train wallpaper is still in the pizza-papers dir as a sign that the user still has all sample wallpapers
             echo -e "\nThird download failed; Make sure you are not on school wifi"
           fi
           mv /home/$user/Pictures/pizza-papers/train_railway_forest_169685_1920x1080.jpg /home/$user/Pictures/pizza-papers/TRAINS.jpg
-          #############################################################################################SETTINGS
         else
           echo "Exiting"
         fi
