@@ -3,5 +3,3 @@ The usually unstable version of pizza-paper that I keep here in case I want to w
 
 # WIP:
 Polishing code to eventually port to main branch, removing unneccessary code, making sure inputs work as they should.
-
-Preventing wallpaper from dissapearing when deleting the image file linked to it by automatically setting it back to a default wallpaper
