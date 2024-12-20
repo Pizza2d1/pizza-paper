@@ -4,7 +4,7 @@
 VERSION=$"pizzapaper 1.2.4 unstable"	      #Tells the user the version
 user=$(whoami)							                #Gets the username of the person calling the program so that it only affects that user's desktop
 WallpaperList=()						                #Needed so that that user can have custom wallpapers               
-AMOUNT_OF_SETTINGS=3
+AMOUNT_OF_SETTINGS=4
 #I like these ones better ^^^^^ so they get to be at the top
 
 #Necessary checks needed for redundancy and being more user-friendly
@@ -21,7 +21,7 @@ fi
 if [ -f /home/$user/Pictures/pizza-papers/TRAINS.jpg ]; then                          #Checks to see if the user decided to download the included wallpapers (pizzapaper --feature)
   ShortHelpFlag="|m|a|s|t"                                                            #Will display sample wallpaper options if the user has them downloaded
   SampleWallpaperStatus=""                                                            #Will NOT say something if the user has sample images
-  YesYouHaveIt="(If you would like to delete them, use \"--sample remove\")"          #Will tell the user if they have the sample images if it detects them
+  YesYouHaveIt="(If you would like to delete them, use \"$ProgName --sample remove\")"          #Will tell the user if they have the sample images if it detects them
   WallpaperAccess=true                                                                #Will allow the user to access the sample images now that they're downloaded
 else
   ShortHelpFlag=""                                                                    #Will display sample wallpaper options if the user has them downloaded (they dont)
@@ -52,16 +52,25 @@ if [ ! -d "/home/$user/Pictures/pizza-papers" ]; then                 #Will make
   mkdir /home/$user/Pictures/pizza-papers
 fi
 if [ ! -f "/home/$user/Pictures/pizza-papers/settings.log" ]; then    #Creates a settings.log file if the user does not have it to store settings such as "show cli" or "open with selector"
+  OriginalWallpaper=$(gsettings get org.gnome.desktop.background picture-uri)
+  if [[ $OriginalWallpaper == *"file://"* ]]; then
+    OWallpaperPath=${OriginalWallpaper:8:-1}
+  else
+    OWallpaperPath=$OriginalWallpaper
+  fi
   touch /home/$user/Pictures/pizza-papers/settings.log
   echo "Enable CLI Selection:  0     #Lets the user use CLI instead of the default GUI selectors" > /home/$user/Pictures/pizza-papers/settings.log
   echo "Default Function:      1     #Decides what main function will run when pizza-paper is executed without arguments (LessHelp, Help_Options, AddWallpaper, SelectWallpaper)" >> /home/$user/Pictures/pizza-papers/settings.log
   echo "Select when adding:    1     #When the user adds a new wallpaper it will automatically make it their wallpaper" >> /home/$user/Pictures/pizza-papers/settings.log
+  echo "$OWallpaperPath" >> /home/$user/Pictures/pizza-papers/settings.log
 fi
+
 ###########################################
 
 
-#Main functions
-function Less_Help (){			                  #Runs when there are no arguments and whent the user inputs "pizzapaper -h"
+#MAIN FUNCTIONS
+
+function Less_Help (){                        #Runs when there are no arguments and whent the user inputs "pizzapaper -h"
   echo -e "\nPick which argument you want to use with \"$ProgName [-h$ShortHelpFlag | --help|add|select|sample|remove|settings|version]\"\n (The --help option may be more helpful)\n"
   if [[ ! $ProgName == *"pizzapaper"* ]]; then
     echo -e "OPTIONAL:"
@@ -71,7 +80,7 @@ function Less_Help (){			                  #Runs when there are no arguments and
   fi
 }
 
-function Help_Options (){		                  #Gives the user instructions on how to use the program
+function Help_Options (){                     #Gives the user instructions on how to use the program
   echo -e "I hate most --help descriptors that normal commands have that are overly-confusing, so I'm going to try to make this simple enough that a younger me could understand it\n"
   echo -e "$ProgName is a custom program that I made as a passion project to learn how to switch wallpapers in terminal, which eventually turned into a full passion project on learning how a small area of display bash-scripting works. Im also attempting to learn git commands alongside this so that I might become a better programmer and because I think it's interesting\n"
   echo -e "To use this command you must do:\n  $ProgName [ARG]"
@@ -91,6 +100,7 @@ function Help_Options (){		                  #Gives the user instructions on how
 }
 
 function AddWallpaper (){                     #Will let the user add a wallpaper from their computer files
+
   echo -e "How would you like to add your custom wallpaper?:\n"
   echo -e "  1. File selection        Will add a wallpaper from your local computer storage"
   echo -e "  2. Web image URL         Will take a image URL and download it to your /Pictures/pizza-papers/ directory\n"
@@ -145,7 +155,7 @@ function AddWallpaper (){                     #Will let the user add a wallpaper
   fi
 }
 
-function SelectWallpaper (){								  #The user chooses a wallpaper that they they have stored in a directory that they added using AddWallpaper
+function SelectWallpaper (){                  #The user chooses a wallpaper that they they have stored in a directory that they added using AddWallpaper
   if [[ $WallpaperList == "" ]]; then           #Will check to make sure that the user has entered any wallpapers yet
     echo -e "\nYou do not have any custom wallpapers, you can add some buy using $ProgName --add\n"
     exit;
@@ -182,13 +192,40 @@ function SelectWallpaper (){								  #The user chooses a wallpaper that they th
     fi
     exit;
   fi
-  if [[ $uinput =~ $re ]]; then								#Checks to see that the user's input is a number
+  if [[ $uinput =~ $re ]] && [[ $uinput -lt $((${#WallpaperList[@]}+1)) ]]; then								#Checks to see that the user's input is a number
     echo "$(basename ${WallpaperList[$uinput-1]}) is now your new wallpaper"
     gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
     gsettings set org.gnome.desktop.background picture-uri-dark ${WallpaperList[ (($uinput-1)) ]}
     gsettings set org.gnome.desktop.background picture-uri ${WallpaperList[ (($uinput-1)) ]}
   else
     echo "Invalid input"
+  fi
+}
+
+function GUISelectWallpaper (){               #The user chooses a wallpaper out of their custom wallpapers from a feh gui image selector
+  if test -e /home/$user/Pictures/pizza-papers/; then
+    touch TEMPLIST.txt
+    if [[ ${#WallpaperList[@]} -lt 8 ]]; then #If there are LESS THAN (-lt) 8 images in the WallpaperList array then feh will display the images larger for selection
+      FehImageHeight=256
+      FehImageWidth=216
+    else
+      FehImageHeight=128
+      FehImageWidth=108
+    fi
+    feh -t /home/$user/Pictures/pizza-papers/ -E $FehImageHeight -y $FehImageWidth --action 'echo %n >> ./TEMPLIST.txt'  #Opens a feh GUI in "thumbnail" mode so that that user can select a wallpaper from their list that they can see/select from
+    FirstImage=$(head -n 1 ./TEMPLIST.txt)
+    if [[ $FirstImage == "" ]]; then
+      echo "You did not select an image"
+    else
+      echo "$FirstImage is now your desktop wallpaper"
+      gsettings set org.gnome.desktop.background picture-uri-dark /home/$user/Pictures/pizza-papers/$FirstImage
+      gsettings set org.gnome.desktop.background picture-uri /home/$user/Pictures/pizza-papers/$FirstImage
+    fi
+    rm ./TEMPLIST.txt
+    exit;
+  else
+    echo "You do not have any custom wallpapers"
+    exit;
   fi
 }
 
@@ -227,7 +264,7 @@ function RemoveWallpaper (){                  #The user can choose what wallpape
   fi
 }
 
-function Settings (){                        #Will allow the user to change settings in the CLI to let them determine default function that runs when the user does not provide an argument (current: LessHelp)
+function Settings (){                         #Will allow the user to change settings in the CLI to let them determine default function that runs when the user does not provide an argument (current: LessHelp)
   DisplayCurrentDefault
   GetSettings
   echo "" #adds a spacer
@@ -258,11 +295,30 @@ function Settings (){                        #Will allow the user to change sett
   exit;
 
 }
+
+function FallbackWallpaper (){ ##############################################################################################
+  CurrentWallpaper=$(gsettings get org.gnome.desktop.background picture-uri)
+  CurrentWallpaperDark=$(gsettings get org.gnome.desktop.background picture-uri-dark)
+  if [[ $CurrentWallpaper == *"file://"* ]]; then
+    CurrentWallpaper=${CurrentWallpaper:8:-1}
+  fi
+  if [[ $CurrentWallpaperDark == *"file://"* ]]; then
+    CurrentWallpaperDark=${CurrentWallpaperDark:8:-1}
+  fi
+  if [ ! -f $CurrentWallpaper ] && [ ! -f $CurrentWallpaperDark ]; then
+    while read -r LINE; do
+      SettingsText+=("$LINE")
+    done  < "/home/$user/Pictures/pizza-papers/settings.log"
+    gsettings set org.gnome.desktop.background picture-uri ${SettingsText[ (($AMOUNT_OF_SETTINGS-1)) ]}
+    gsettings set org.gnome.desktop.background picture-uri-dark ${SettingsText[ (($AMOUNT_OF_SETTINGS-1)) ]}
+  fi
+}
 ##########################################
 
 
 #Smaller functions that are only for clean code and ease of development
-function GetSettings() {  #Super annoying, I had to look up quite a bit just to figure it out
+
+function GetSettings() {  #Will return number values depending on what was piped into it
   SettingsArray=()
   re='^[0-9]+$'
   for LINE in $(cat /home/$user/Pictures/pizza-papers/settings.log); do #Gets all number values in settings files (numbers are the data being used)
@@ -428,9 +484,10 @@ function Trains_Wallpaper (){	      #Sets the wallpaper to the inside of a autis
 }
 ###########################################
 
+FallbackWallpaper #Will make the wallpaper of the user their default wallpaper if they delete their current pizzapaper wallpaper
 
 #Lists the different options that the user can choose from, "hmast" is for individual letters options like "-h" and "-m"
-options=$(getopt -o hmast,help,mountain,astolfo,sunglasses,train --long "add,select,remove,sample,settings,help,version" -- "$@")
+options=$(getopt -o hmast,help,mountain,astolfo,sunglasses,train --long "add,select,remove,sample,settings,help,version,normal" -- "$@")
 [ $? -eq 0 ] || {
     echo "Incorrect options provided"
     exit 1
@@ -495,36 +552,13 @@ while true; do
           exit;
         fi
         re='^[0-9]+$'
-        if [[ $2 =~ $re ]]; then	#Checks to see that the users second argument is a number (if there even IS and argument)
+        if [[ $2 =~ $re ]] && [[ $2 -lt $((${#WallpaperList[@]}+1)) ]]; then	#Checks to see that the users second argument is a number (if there even IS and argument)
           INFILE=/home/$user/Documents/pizzapapers.txt
           echo "$(basename ${WallpaperList[$2-1]}) is now your new wallpaper"
           gsettings set org.gnome.desktop.background picture-uri-dark ${WallpaperList[ (($2-1)) ]}
           gsettings set org.gnome.desktop.background picture-uri ${WallpaperList[ (($2-1)) ]}
         elif [[ $(echo "WantCLI" | GetSettings) == "0" ]]; then #If the user chose to have a CLI instead of GUI in settings, it will do that instead
-          if test -e /home/$user/Pictures/pizza-papers/; then
-            touch TEMPLIST.txt
-            if [[ ${#WallpaperList[@]} -lt 8 ]]; then #If there are LESS THAN (-lt) 8 images in the WallpaperList array then feh will display the images larger for selection
-              FehImageHeight=256
-              FehImageWidth=216
-            else
-              FehImageHeight=128
-              FehImageWidth=108
-            fi
-            feh -t /home/$user/Pictures/pizza-papers/ -E $FehImageHeight -y $FehImageWidth --action 'echo %n >> ./TEMPLIST.txt'  #Opens a feh GUI in "thumbnail" mode so that that user can select a wallpaper from their list that they can see/select from
-            FirstImage=$(head -n 1 ./TEMPLIST.txt)
-            if [[ $FirstImage == "" ]]; then
-              echo "You did not select an image"
-            else
-              echo "$FirstImage is now your desktop wallpaper"
-              gsettings set org.gnome.desktop.background picture-uri-dark /home/$user/Pictures/pizza-papers/$FirstImage
-              gsettings set org.gnome.desktop.background picture-uri /home/$user/Pictures/pizza-papers/$FirstImage
-            fi
-            rm ./TEMPLIST.txt
-            exit;
-          else
-            echo "You do not have any custom wallpapers"
-            exit;
-          fi
+          GUISelectWallpaper
         else
           SelectWallpaper
         fi
@@ -532,6 +566,7 @@ while true; do
     --remove)               #Opens a feh GUI in "thumbnail" mode so that that user can delete selected wallpapers in /Pictures/pizza-papers/ directory)
         shift;
         RemoveWallpaper
+        #FallbackWallpaper #Will make the wallpaper of the user their default wallpaper if they delete their current pizzapaper wallpaper
         exit;;
     --sample)               #Downloads 4 example image files for the user to be able to use)
         shift;
@@ -569,7 +604,7 @@ while true; do
           echo "Exiting"
         fi
         exit;;
-    --settings)
+    --settings)             #Will allow the user to change their settings for a more personal selection format)
         shift;
         echo "Default functions: (1: LessHelp, 2: MoreHelp, 3: AddWallpaper, 4: SelectWallpaper)"
         Settings
@@ -578,9 +613,16 @@ while true; do
         shift;	            #I don't know why shift is used tbh, but I'm afraid it will break if I remove it
         Help_Options
         exit;;
-    --version)
+    --version)              #Will display current version)
         shift;
         echo $VERSION
+        exit;;
+    --normal)
+        shift;
+        gsettings set org.gnome.desktop.background picture-uri /
+        gsettings set org.gnome.desktop.background picture-uri-dark /
+        gsettings set org.gnome.desktop.background picture-uri-dark /home/$user/Pictures/Screenshot_2024-07-10_202425.png
+        gsettings set org.gnome.desktop.background picture-uri-dark /home/pizza2d1/Pictures/Screenshot_2024-07-10_202425.png
         exit;;
     --)					            #No idea whatsoever, I don't want to remove it though)
         shift
@@ -590,16 +632,19 @@ while true; do
     shift
 done
 
+
 #I am the one and only
 if $IAMGOD; then
   echo -e "Dev commands:\n"
   echo "./path-partner --retard"
   echo "./path-partner --copy"
+  echo "./pizzapaper_testing.sh --normal"
 fi
+
 
 #Will decide what function will be used when the user only does "./pizza-paper.sh" or "pizzapaper", the default is Less_Help
 DefaultFunction=$(echo "Default" | GetSettings) #Will pipe (insert) a string containing "Default" into the GetSettings function, which will identify the string and return a certain value as a variable
-case "$DefaultFunction" in  #case will check to see if $DefaultFunction fits the same value of any of the options
+case "$DefaultFunction" in                      #case will check to see if $DefaultFunction fits the same value of any of the options
     1)
         Less_Help
         exit;;
