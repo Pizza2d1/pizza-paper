@@ -110,6 +110,10 @@ function AddWallpaper (){                     #Will let the user add a wallpaper
     echo "Select which file(s) you would like to add"                                   #Yes, you can select multiple files
     Files=$(zenity --file-selection --multiple)                                         #Opens file selection to choose image files
     IFS='|'                                                                             #Sets the splice modifier so that "read -ra" splits the $Files string after every "|"
+    if [[ $Files == "" ]]; then
+      echo "Exiting out"
+      exit;
+    fi
     read -ra IndividualImages <<< "$Files" #Appends each file name into an array name IndividualImages
     if [[ ${#IndividualImages[@]} == 1 ]] && [[ $AddToSet == "1" ]]; then
       gsettings set org.gnome.desktop.background picture-uri "$IndividualImages"
@@ -257,6 +261,7 @@ function RemoveWallpaper (){                  #The user can choose what wallpape
       fi
     done
     rm ./TEMPLIST.txt
+    FallbackWallpaper     #If the user deletes their current wallpaper (which is stored in the pizza-papers folder) the default wallpaper will be set
     exit;
   else
     echo "You do not have any custom wallpapers"
@@ -296,7 +301,7 @@ function Settings (){                         #Will allow the user to change set
 
 }
 
-function FallbackWallpaper (){ ##############################################################################################
+function FallbackWallpaper (){                #If the user deletes their current wallpaper, they can run pizzapaper again to set it back to their default wallpaper when they first ran the program
   CurrentWallpaper=$(gsettings get org.gnome.desktop.background picture-uri)
   CurrentWallpaperDark=$(gsettings get org.gnome.desktop.background picture-uri-dark)
   if [[ $CurrentWallpaper == *"file://"* ]]; then
@@ -305,7 +310,7 @@ function FallbackWallpaper (){ #################################################
   if [[ $CurrentWallpaperDark == *"file://"* ]]; then
     CurrentWallpaperDark=${CurrentWallpaperDark:8:-1}
   fi
-  if [ ! -f $CurrentWallpaper ] && [ ! -f $CurrentWallpaperDark ]; then
+  if [ ! -f ${CurrentWallpaper:1:-1} ] && [ ! -f ${CurrentWallpaperDark:1:-1} ]; then
     while read -r LINE; do
       SettingsText+=("$LINE")
     done  < "/home/$user/Pictures/pizza-papers/settings.log"
@@ -331,7 +336,9 @@ function GetSettings() {  #Will return number values depending on what was piped
   if [ -t 0 ]; then #Will check if a value has NOT been piped INTO the function, running [ -t 1 ] again will test if the function is being piped OUT of the function
     EchoSettings="/home/$user/Pictures/pizza-papers/settings.log" #Gets all number values in settings files (numbers are the data being used)
     while read -r LINE; do
-      printf "%s\n" "${LINE:0:24}" #{parameter:startingposition:offset}  Variable name, starts at 0, how many letters you want to encompass/read
+      if [[ ! $LINE == *"/"* ]]; then
+        printf "%s\n" "${LINE:0:24}" #{parameter:startingposition:offset}  Variable name, starts at 0, how many letters you want to encompass/read
+      fi
     done < $EchoSettings    #Will use the settings.log file as the input for the read -r operation
     return
   fi
@@ -484,7 +491,6 @@ function Trains_Wallpaper (){	      #Sets the wallpaper to the inside of a autis
 }
 ###########################################
 
-FallbackWallpaper #Will make the wallpaper of the user their default wallpaper if they delete their current pizzapaper wallpaper
 
 #Lists the different options that the user can choose from, "hmast" is for individual letters options like "-h" and "-m"
 options=$(getopt -o hmast,help,mountain,astolfo,sunglasses,train --long "add,select,remove,sample,settings,help,version,normal" -- "$@")
@@ -565,6 +571,7 @@ while true; do
         exit;;
     --remove)               #Opens a feh GUI in "thumbnail" mode so that that user can delete selected wallpapers in /Pictures/pizza-papers/ directory)
         shift;
+        #FallbackWallpaper #Will make the wallpaper of the user their default wallpaper IF they delete their current pizzapaper wallpaper
         RemoveWallpaper
         #FallbackWallpaper #Will make the wallpaper of the user their default wallpaper if they delete their current pizzapaper wallpaper
         exit;;
