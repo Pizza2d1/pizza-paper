@@ -1,7 +1,7 @@
 #This is my own little thing that I made to switch up desktop wallpapers, it sucks but I think it works best for me
 #To get instructions on how to run this you can just execute it or look on github for "How to use"
 
-VERSION=$"pizzapaper 1.2.4 unstable"	      #Tells the user the version
+VERSION=$"pizzapaper 1.2.5 unstable"	      #Tells the user the version
 user=$(whoami)							                #Gets the username of the person calling the program so that it only affects that user's desktop
 WallpaperList=()						                #Needed so that that user can have custom wallpapers               
 AMOUNT_OF_SETTINGS=4
