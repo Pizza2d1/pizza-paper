@@ -62,13 +62,13 @@ while true; do
     --retard) #users don't use this, fuck off)
         shift;
         echo "Resetting pizzapaper contents"
-        sleep 0.5
+        sleep 0.2
         ResetPapers
         echo "Resetting wallpapers"
-        sleep 0.5
+        sleep 0.2
         ResetFiles
         echo "Resetting settings"
-        sleep 0.5
+        sleep 0.2
         ResetSettings
         gsettings set org.gnome.desktop.background picture-uri "file:///usr/share/backgrounds/warty-final-ubuntu.png"
         gsettings set org.gnome.desktop.background picture-uri-dark "file:///usr/share/backgrounds/warty-final-ubuntu.png"
@@ -76,6 +76,10 @@ while true; do
     --copy)
         shift;
         cp /home/pizza2d1/pizzapaper_testing.sh /home/pizza2d1/pizza-paper.sh
+        exit;;
+    --version)
+        shift;
+        echo "Why would this have a version number, dumbass"
         exit;;
     --)
         shift
