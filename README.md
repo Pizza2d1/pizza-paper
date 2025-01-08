@@ -28,6 +28,8 @@ Most likely the last version that I work on unless I care enough
 A wallpaper switching bash script that I made to try and learn some bash (because I think Ill use it in future careers) and because I wanted it to be customizable to me, I use linux btw
 
 # How to use
+You run _~/pizza-paper.sh_
+
 All functionality can be done with pizza-paper.sh and does not require any additional packages to be downloaded (I don't think)
 
 If you are in a non-ubuntu version of linux you may need to install packages from this list: [feh, zenity, gsettings]
