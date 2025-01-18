@@ -1,14 +1,15 @@
 #This is my own little thing that I made to switch up desktop wallpapers, it sucks but I think it works best for me
 #To get instructions on how to run this you can just execute it or look on github for "How to use"
 
-VERSION=$"pizzapaper 1.2.5"	                #Tells the user the current version
+VERSION=$"pizzapaper 1.2.6"	                #Tells the user the current version
 user=$(whoami)							                #Gets the username of the person calling the program so that it only affects that user's desktop
 WallpaperList=()						                #Needed so that that user can have custom wallpapers               
 AMOUNT_OF_SETTINGS=5                        #Will be used to know how many lines to look for in settings (while loops amiright?)
+ROTATION_SPEED=2 #Seconds                 #Will determine how fast wallpapers will rotate with the rotatewallaper function
 #I like these variables better ^^^^^ so they get to be at the top
 
 #Necessary checks needed for redundancy and being more user-friendly
-if [ -d /home/pizza2d1 ]; then				                                              #I AM THE ADMIN I GET SPECIAL PRIVILEGES BITCHES
+if [ -d /home/pizza2d1 ]; then				                                                #I AM THE ADMIN I GET SPECIAL PRIVILEGES BITCHES
   IAMGOD=true
 else
   IAMGOD=false
@@ -69,7 +70,7 @@ fi
 
 ###########################################
 
-
+# curl
 #MAIN FUNCTIONS
 
 function Less_Help (){                        #Runs when there are no arguments and whent the user inputs "pizzapaper -h"
@@ -97,6 +98,7 @@ function Help_Options (){                     #Gives the user instructions on ho
   echo -e "  --select            Lets you select what wallpaper you want to use out of your custom wallpapers that you have added, USAGE: --select | --select [wallpaper number]\n"
   echo -e "  --remove            Lets you remove a single or multiple wallpapers from your pizzapapers list/folder\n"
   echo -e "  --settings          Lets you select different settings that might be more useful to you\n"
+  echo -e "  --rotate            Will rotate through all of your saved wallpapers\n"
   echo -e "  --version           Echos the current $ProgName version\n"
   echo -e "  --help              Will display this, a much more detailed explanation on how to use this program and its arguments\n\n"
 }
@@ -275,25 +277,25 @@ function Settings (){                         #Will allow the user to change set
   DisplayCurrentDefault
   GetSettings
   echo "" #adds a spacer
-  read -p "What setting do you want to change? [1/2]: " uinput
+  read -p "What setting do you want to change? [1/2/3/4]: " uinput
   while [[ $uinput != "" ]]; do
     if [[ $uinput == "1" ]]; then
-      Setting1
+      Setting1        #Used for enabling CLI interface
       DisplayCurrentDefault
       GetSettings
       echo "" #adds a spacer
     elif [[ $uinput == "2" ]]; then
-      Setting2
+      Setting2        #Used for changing the default function
       DisplayCurrentDefault
       GetSettings
       echo "" #adds a spacer
     elif [[ $uinput == "3" ]]; then
-      Setting3
+      Setting3        #Used for if the user wants to set new wallpapers
       DisplayCurrentDefault
       GetSettings
       echo "" #adds a spacer
     elif [[ $uinput == "4" ]]; then
-      Setting4
+      Setting4        #Used to set the default wallpaper
       DisplayCurrentDefault
       GetSettings
       echo "" #adds a spacer
@@ -301,7 +303,7 @@ function Settings (){                         #Will allow the user to change set
       echo "Invalid input"
       exit
     fi
-    read -p "What setting do you want to change? [1/2]: " uinput
+    read -p "What setting do you want to change? [1/2/3/4]: " uinput
   done
   echo "Exiting"
   exit;
@@ -326,6 +328,34 @@ function FallbackWallpaper (){                #If the user deletes their current
     gsettings set org.gnome.desktop.background picture-uri-dark "${SettingsText[ (($AMOUNT_OF_SETTINGS-1)) ]}"
   fi
 }
+
+function RotateWallpaper (){
+  CurrentWallpaper=$(gsettings get org.gnome.desktop.background picture-uri)
+  if [[ ${WallpaperList[@]} == *${CurrentWallpaper:1:-1}* ]]; then
+    for item in $(seq 0 ${#WallpaperList[@]}); do
+      if [[ ${WallpaperList[$item]} == *${CurrentWallpaper:1:-1}* ]]; then
+        Index=$item;
+      fi
+    done
+    for i in $(seq $Index $((${#WallpaperList[@]}-1))); do
+      gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
+      gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
+      sleep $ROTATION_SPEED
+    done
+  fi
+  while true; do
+    CurrentWallpaper=$(gsettings get org.gnome.desktop.background picture-uri)
+    CurrentWallpaperDark=$(gsettings get org.gnome.desktop.background picture-uri-dark)
+    if [[ $CurrentWallpaper != $CurrentWallpaperDark ]]; then
+      $CurrentWallpaperDark=$CurrentWallpaper
+    fi
+    for i in $(seq 0 $((${#WallpaperList[@]}-1))); do
+      gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
+      gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
+      sleep $ROTATION_SPEED
+    done
+  done
+}
 ##########################################
 
 
@@ -343,9 +373,11 @@ function GetSettings() {  #Will return number values depending on what was piped
   #Will display settings and what value they are
   if [ -t 0 ]; then #Will check if a value has NOT been piped INTO the function, running [ -t 1 ] again will test if the function is being piped OUT of the function
     EchoSettings="/home/$user/Pictures/pizza-papers/settings.log" #Gets all number values in settings files (numbers are the data being used)
+    SettingNumber=0
     while read -r LINE; do
+      SettingNumber=$(( $SettingNumber+1 ))
       if [[ ! $LINE == *"/"* ]]; then
-        printf "%s\n" "${LINE:0:24}" #{parameter:startingposition:offset}  Variable name, starts at 0, how many letters you want to encompass/read
+        printf "%s\n" "$SettingNumber. ${LINE:0:24}"    # {parameter:startingposition:offset}  Variable name, starts at 0, how many letters you want to encompass/read
       fi
     done < $EchoSettings    #Will use the settings.log file as the input for the read -r operation
     return
@@ -363,7 +395,7 @@ function GetSettings() {  #Will return number values depending on what was piped
   fi
 }
 
-function Setting1 (){     #Will change the value of the first setting as a bit value 0/1
+function Setting1 (){     #Used for enabling CLI interface
   SETTING_NUMBER=1 #Use this to determine what setting is being changed
   SettingsValues=()
   re='^[0-9]+$'
@@ -410,7 +442,7 @@ function DisplayCurrentDefault (){
   fi
 }
 
-function Setting2 (){     #Will change the value as an iterable value 1>2>3>4>1>2>3>4...
+function Setting2 (){     #Used for changing the default function...
   SETTING_NUMBER=2 #Use this to determine what setting is being changed
 
   SettingsValues=()
@@ -442,7 +474,7 @@ function Setting2 (){     #Will change the value as an iterable value 1>2>3>4>1>
   done
 }
 
-function Setting3 (){     #Will change the value of the first setting as a bit value 0/1
+function Setting3 (){     #Used for if the user wants to set new wallpapers
   SETTING_NUMBER=3 #Use this to determine what setting is being changed
   SettingsValues=()
   re='^[0-9]+$'
@@ -473,8 +505,8 @@ function Setting3 (){     #Will change the value of the first setting as a bit v
   done
 }
 
-function Setting4 (){
-  SETTING_NUMBER=5 #Use this to determine what setting is being changed
+function Setting4 (){     #Used to set the default wallpaper
+  SETTING_NUMBER=4 #Use this to determine what setting/line is being changed
   SettingsText=()
   #Reads the individual lines of settings.log and puts it into an array
   while read -r LINE; do
@@ -521,7 +553,7 @@ function Trains_Wallpaper (){	      #Sets the wallpaper to the inside of a autis
 
 
 #Lists the different options that the user can choose from, "hmast" is for individual letters options like "-h" and "-m"
-options=$(getopt -o hmast,help,mountain,astolfo,sunglasses,train --long "add,select,remove,sample,settings,help,version,normal" -- "$@")
+options=$(getopt -o hmast,help,mountain,astolfo,sunglasses,train --long "add,select,remove,sample,settings,help,version,normal,rotate" -- "$@")
 [ $? -eq 0 ] || {
     echo "Incorrect options provided"
     exit 1
@@ -554,7 +586,7 @@ while true; do
          fi
          exit;;
       -t | -train)          #Will make the desktop background a picture of a train)
-         if $WallpaperAccess; then
+         if [[  ${WallpaperList[@]} == *"TRAINS.jpg"* ]]; then	
            Trains_Wallpaper
          else
            echo -e "You must run \"$ProgName --sample\" to download these files"
@@ -634,7 +666,7 @@ while true; do
             echo -e "\nThird download failed; Make sure you are not on school wifi"
           fi
           mv /home/$user/Pictures/pizza-papers/train_railway_forest_169685_1920x1080.jpg /home/$user/Pictures/pizza-papers/TRAINS.jpg
-          #Will add the sample wallpapers to pizzapapers.txt so they can be selected in the CLI selection interface
+          #Will add the sample wallpapers to pizzapapers.txt so they can be selected in the selection interface
           if [[  ${WallpaperList[@]} != *"mountains.jpg"* ]]; then	
             echo "/home/$user/Pictures/pizza-papers/mountains.jpg" >> /home/$user/Documents/pizzapapers.txt   #If there is not already this sample image name put into the wallpaper list, it will add it
           fi
@@ -656,6 +688,10 @@ while true; do
         echo "Default functions: (1: LessHelp, 2: MoreHelp, 3: AddWallpaper, 4: SelectWallpaper)"
         Settings
         exit;;
+    --rotate)
+        shift;
+        RotateWallpaper
+        exit;;
     --help)				          #Will activate when pizzapaper --help is used, the BETTER option for getting info)
         shift;	            #I don't know why shift is used tbh, but I'm afraid it will break if I remove it
         Help_Options
@@ -663,13 +699,6 @@ while true; do
     --version)              #Will display current version)
         shift;
         echo $VERSION
-        exit;;
-    --normal)
-        shift;
-        gsettings set org.gnome.desktop.background picture-uri /
-        gsettings set org.gnome.desktop.background picture-uri-dark /
-        gsettings set org.gnome.desktop.background picture-uri-dark /home/$user/Pictures/Screenshot_2024-07-10_202425.png
-        gsettings set org.gnome.desktop.background picture-uri-dark /home/pizza2d1/Pictures/Screenshot_2024-07-10_202425.png
         exit;;
     --)					            #No idea whatsoever, I don't want to remove it though)
         shift
@@ -683,9 +712,8 @@ done
 #I am the one and only
 if $IAMGOD; then
   echo -e "Dev commands:\n"
-  echo "./path-partner --retard"
-  echo "./path-partner --copy"
-  echo "./pizzapaper_testing.sh --normal"
+  echo "./path-partner --retard.............Resets all pizza-paper files and directories"
+  echo "./path-partner --copy...............Can be used to add -a and remove -r pizzapaper-testing to PATH"
 fi
 
 
