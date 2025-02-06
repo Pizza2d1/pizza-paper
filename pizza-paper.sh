@@ -661,7 +661,7 @@ while true; do
           #This part will make them readable (and in the case of sunglasses, usable), they are in order of links above
           mv /home/$user/Pictures/pizza-papers/il_1140xN.5095674952_4itq.jpg /home/$user/Pictures/pizza-papers/mountains.jpg
           mv /home/$user/Pictures/pizza-papers/photo-1473496169904-658ba7c44d8a /home/$user/Pictures/pizza-papers/sunglasses.jpeg #There was no image extension so I had to add it to make it work
-          mv /home/$user/Pictures/pizza-papers/50703090_1022241357960569_4488694694989004800_n.jpg /home/$user/Pictures/pizza-papers/astolfo.jpg
+          mv /home/$user/Pictures/pizza-papers/thumb-1920-906149.png /home/$user/Pictures/pizza-papers/astolfo.jpg
           if [ $? -ne 0 ]; then #Makes sure that the train wallpaper is still in the pizza-papers dir as a sign that the user still has all sample wallpapers
             echo -e "\nThird download failed; Make sure you are not on school wifi"
           fi
