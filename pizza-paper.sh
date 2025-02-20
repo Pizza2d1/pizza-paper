@@ -8,6 +8,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 VERSION=$"pizzapaper 1.2.7"	                #Tells the user the current version
 user=$(whoami)							                #Gets the username of the person calling the program so that it only affects that user's desktop
 WallpaperList=()						                #Needed so that that user can have custom wallpapers               
@@ -20,6 +21,13 @@ WallpaperList=()						                #Needed so that that user can have custom 
 AMOUNT_OF_SETTINGS=5                        #Will be used to know how many lines to look for in settings (while loops amiright?)
 ROTATION_SPEED=2 #Seconds                 #Will determine how fast wallpapers will rotate with the rotatewallaper function
 >>>>>>> 61b68b7 (Added wallpaper rotation)
+=======
+VERSION=$"pizzapaper 1.2.7"	                #Tells the user the current version
+user=$(whoami)							                #Gets the username of the person calling the program so that it only affects that user's desktop
+WallpaperList=()						                #Needed so that that user can have custom wallpapers               
+AMOUNT_OF_SETTINGS=5                        #Will be used to know how many lines to look for in settings (while loops amiright?)
+ROTATION_SPEED=3 #Seconds                 #Will determine how fast wallpapers will rotate with the rotatewallaper function
+>>>>>>> 3031276 (Update to 1.2.7, changed PATH directory for path_adder.sh)
 #I like these variables better ^^^^^ so they get to be at the top
 
 <<<<<<< HEAD
@@ -47,6 +55,7 @@ if [ -d "/home/pizza2d1" ]; then				#I AM THE ADMIN I GET SPECIAL PRIVILEGES BIT
 else
   IAMGOD=false
 fi
+<<<<<<< HEAD
 
 if [ ! -d "/home/$user/Documents" ]; then			#Makes a Documents directory in case you are a weird little idiot that feels like they're better than everyone else
   echo "wtf why don't you have a Documents folder, making one now to store a list of your wallpapers..."
@@ -66,6 +75,8 @@ else
 <<<<<<< HEAD
   IAMGOD=false
 fi
+=======
+>>>>>>> 3031276 (Update to 1.2.7, changed PATH directory for path_adder.sh)
 if [ -f /usr/custom_paths/pizzapaper ]; then			                                        #ProgName will be used to swap between "pizza-paper.sh" and "pizzapaper" depending on what the user has installed for convenience
   ProgName="pizzapaper"                             
 elif [ -f ./pizza-paper.sh ]; then
@@ -247,11 +258,11 @@ fi
 #MAIN FUNCTIONS
 
 function Less_Help (){                        #Runs when there are no arguments and whent the user inputs "pizzapaper -h"
-  echo -e "\nPick which argument you want to use with \"$ProgName [-h$ShortHelpFlag | --help|add|select|sample|remove|settings|version]\"\n (The --help option may be more helpful)\n"
+  echo -e "\nPick which argument you want to use with \"$ProgName [-h$ShortHelpFlag | --help|add|select|sample|remove|settings|rotate|version]\"\n (The --help option may be more helpful)\n"
   if [[ ! $ProgName == *"pizzapaper"* ]]; then
     echo -e "OPTIONAL:"
     echo -e "   If you would like to run the program as \"pizzapaper [ARG]\" (as I recommend) you will have to run \"sudo ./pizza_path_partner -add\" to add pizzapaper to your \$PATH files"
-    echo -e "   To remove the pizzapaper file in your \$PATH directory, use \"sudo path-adder.sh -remove\" OR \"sudo rm /usr/local/bin/pizzapaper\""
+    echo -e "   To remove the pizzapaper file in your \$PATH directory, use \"sudo path-adder.sh -remove\" OR \"sudo rm /usr/custom_paths/pizzapaper\""
     echo -e "   After you run it, you can delete pizza-paper.sh :3\n"
   fi
 }
@@ -280,7 +291,7 @@ function Help_Options (){                     #Gives the user instructions on ho
   echo -e "  --select            Lets you select what wallpaper you want to use out of your custom wallpapers that you have added, USAGE: --select | --select [wallpaper number]\n"
   echo -e "  --remove            Lets you remove a single or multiple wallpapers from your pizzapapers list/folder\n"
   echo -e "  --settings          Lets you select different settings that might be more useful to you\n"
-  echo -e "  --rotate            Will rotate through all of your saved wallpapers\n"
+  echo -e "  --rotate            Will rotate through all of your saved wallpapers, USAGE: --rotate [seconds between switching]]\n"
   echo -e "  --version           Echos the current $ProgName version\n"
   echo -e "  --help              Will display this, a much more detailed explanation on how to use this program and its arguments\n\n"
 }
@@ -819,6 +830,9 @@ function RotateWallpaper (){
     done
     for i in $(seq $Index $((${#WallpaperList[@]}-1))); do
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3031276 (Update to 1.2.7, changed PATH directory for path_adder.sh)
       if [[ ! ${WallpaperList[i]} == *"astolfo"* ]]; then
         if ! $FagFlag; then
           continue
@@ -829,11 +843,14 @@ function RotateWallpaper (){
           echo "Wump"
         fi
       fi
+<<<<<<< HEAD
 =======
       gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
       gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
       sleep $ROTATION_SPEED
 >>>>>>> 61b68b7 (Added wallpaper rotation)
+=======
+>>>>>>> 3031276 (Update to 1.2.7, changed PATH directory for path_adder.sh)
     done
   fi
   while true; do
@@ -844,6 +861,9 @@ function RotateWallpaper (){
     fi
     for i in $(seq 0 $((${#WallpaperList[@]}-1))); do
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3031276 (Update to 1.2.7, changed PATH directory for path_adder.sh)
       if [[ ! ${WallpaperList[i]} == *"astolfo"* ]]; then
         if ! $FagFlag; then
           continue
@@ -1466,7 +1486,7 @@ while true; do
         if [[ $(echo "WantCLI" | GetSettings) == "0" ]]; then #If the user chose to have a CLI instead of GUI in settings, it will do that instead
 =======
         if [[ $WallpaperList == "" ]]; then           #Will check to make sure that the user has entered any wallpapers yet
-          echo -e "\nYou do not have any custom wallpapers, you can add some buy using $ProgName --add\n"
+          echo -e "\nYou do not have any custom wallpapers, you can add some buy using $ProgName --add OR $ProgName --sample\n"
           exit;
         fi
         re='^[0-9]+$'
@@ -1646,12 +1666,12 @@ while true; do
         fi
         if [[ $uinput == *"y"* || $2 == *"y"* ]]; then
         #Requests images from different website links (they are extracted in incoherant names)
-          urls="https://i.etsystatic.com/43678560/r/il/e318c5/5095674952/il_1140xN.5095674952_4itq.jpg https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D https://images4.alphacoders.com/906/thumb-1920-906149.png https://images.wallpaperscraft.com/image/single/train_railway_forest_169685_1920x1080.jpg"
+          urls="https://images.unsplash.com/photo-1510711789248-087061cda288?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D https://images4.alphacoders.com/906/thumb-1920-906149.png https://images.wallpaperscraft.com/image/single/train_railway_forest_169685_1920x1080.jpg"
           for links in $urls; do
             cd /home/pizza2d1/Pictures/pizza-papers/ && { curl -O $links ; cd -; }
           done
           #This part will make them readable (and in the case of sunglasses, usable), they are in order of links above
-          mv /home/$user/Pictures/pizza-papers/il_1140xN.5095674952_4itq.jpg /home/$user/Pictures/pizza-papers/mountains.jpg
+          mv /home/$user/Pictures/pizza-papers/photo-1510711789248-087061cda288 /home/$user/Pictures/pizza-papers/mountains.jpg
           mv /home/$user/Pictures/pizza-papers/photo-1473496169904-658ba7c44d8a /home/$user/Pictures/pizza-papers/sunglasses.jpeg #There was no image extension so I had to add it to make it work
           mv /home/$user/Pictures/pizza-papers/thumb-1920-906149.png /home/$user/Pictures/pizza-papers/astolfo.jpg
           if [ $? -ne 0 ]; then #Makes sure that the train wallpaper is still in the pizza-papers dir as a sign that the user still has all sample wallpapers
@@ -1692,6 +1712,21 @@ while true; do
 =======
     --rotate)
         shift;
+        if [[ $WallpaperList == "" ]]; then           #Will check to make sure that the user has entered any wallpapers yet
+          echo -e "\nYou do not have any custom wallpapers, you can add some buy using $ProgName --add OR $ProgName --sample\n"
+          exit;
+        fi
+        re="^[0-9]*.[0-9]*$"
+        if [[ $2 =~ $re ]]; then
+          ROTATION_SPEED=$2
+        fi
+        if [[ $3 == *"y"* ]]; then
+          FagFlag=(true)
+        else
+          FagFlag=(false)
+        fi
+        echo $3
+        echo $FagFlag
         RotateWallpaper
         exit;;
 >>>>>>> 61b68b7 (Added wallpaper rotation)

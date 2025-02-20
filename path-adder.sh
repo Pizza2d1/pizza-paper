@@ -22,9 +22,17 @@ RemoveFile (){
 =======
 >>>>>>> 4d4fc3f (New Settings)
 RemoveFile (){
+<<<<<<< HEAD
   if test -f /usr/local/bin/pizzapaper; then		  #If pizzapaper is found in the path file, then it will delete it
     rm /usr/local/bin/pizzapaper
 >>>>>>> bc8de37 (More features and new file)
+=======
+  if test -f /usr/custom_paths/pizzapaper; then		  #If pizzapaper is found in the path file, then it will delete it
+    rm /usr/custom_paths/pizzapaper
+    rmdir /usr/custom_paths
+    if [ $? -ne 0 ]; then
+      echo "/usr/custom_paths wasn't empty, you either have extra files in that directory or will have do remove it manually"
+>>>>>>> 3031276 (Update to 1.2.7, changed PATH directory for path_adder.sh)
   else
     echo "pizzapaper was not found in that directory, it may have already been removed"
   fi
@@ -32,8 +40,13 @@ RemoveFile (){
 
 AddFile (){
 <<<<<<< HEAD
+<<<<<<< HEAD
   if ! test -f /usr/custom_paths/pizzapaper; then		#If pizzapaper is NOT found in the path file, it will add it
     if test -f ./pizza-paper.sh; then
+=======
+  if ! test -f /usr/custom_paths/pizzapaper; then		#If pizzapaper is NOT found in the path file, it will add it
+    if test -f */pizzapaper.sh; then
+>>>>>>> 3031276 (Update to 1.2.7, changed PATH directory for path_adder.sh)
       mkdir /usr/custom_paths
       cp ./pizza-paper.sh /usr/custom_paths/pizzapaper
     else
