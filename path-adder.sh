@@ -13,6 +13,7 @@ RemoveFile (){
     if [ $? -ne 0 ]; then
       echo "/usr/custom_paths wasn't empty, you either have extra files in that directory or will have do remove it manually"
     fi
+<<<<<<< HEAD
 =======
 =======
 #Can be used to copy pizza-paper.sh to one of your PATH folders, mainly so that you don't have to be in a specific directory to use it and I don't like it ending with .sh (github requires it)
@@ -33,6 +34,8 @@ RemoveFile (){
     if [ $? -ne 0 ]; then
       echo "/usr/custom_paths wasn't empty, you either have extra files in that directory or will have do remove it manually"
 >>>>>>> 3031276 (Update to 1.2.7, changed PATH directory for path_adder.sh)
+=======
+>>>>>>> c5c544b (fix)
   else
     echo "pizzapaper was not found in that directory, it may have already been removed"
   fi
