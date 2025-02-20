@@ -14,7 +14,7 @@ if [ -d /home/pizza2d1 ]; then				                                              
 else
   IAMGOD=false
 fi
-if [ -f /usr/local/bin/pizzapaper ]; then			                                        #ProgName will be used to swap between "pizza-paper.sh" and "pizzapaper" depending on what the user has installed for convenience
+if [ -f /usr/custom_paths/pizzapaper ]; then			                                        #ProgName will be used to swap between "pizza-paper.sh" and "pizzapaper" depending on what the user has installed for convenience
   ProgName="pizzapaper"                             
 elif [ -f ./pizza-paper.sh ]; then
   ProgName="./pizza-paper.sh"
@@ -78,7 +78,7 @@ function Less_Help (){                        #Runs when there are no arguments 
   if [[ ! $ProgName == *"pizzapaper"* ]]; then
     echo -e "OPTIONAL:"
     echo -e "   If you would like to run the program as \"pizzapaper [ARG]\" (as I recommend) you will have to run \"sudo ./pizza_path_partner -add\" to add pizzapaper to your \$PATH files"
-    echo -e "   To remove the pizzapaper file in your \$PATH directory, use \"sudo path-adder.sh -remove\" OR \"sudo rm /usr/local/bin/pizzapaper\""
+    echo -e "   To remove the pizzapaper file in your \$PATH directory, use \"sudo path-adder.sh -remove\" OR \"sudo rm /usr/custom_paths/pizzapaper\""
     echo -e "   After you run it, you can delete pizza-paper.sh :3\n"
   fi
 }
