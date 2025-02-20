@@ -16,7 +16,7 @@ RemoveFile (){
 
 AddFile (){
   if ! test -f /usr/custom_paths/pizzapaper; then		#If pizzapaper is NOT found in the path file, it will add it
-    if test -f */pizzapaper.sh; then
+    if test -f */pizza-paper.sh; then
       mkdir /usr/custom_paths
       cp ./pizza-paper.sh /usr/custom_paths/pizzapaper
     else
