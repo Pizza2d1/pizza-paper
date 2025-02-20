@@ -21,7 +21,7 @@ AddFile (){
       cp ./pizzapaper_testing.sh /usr/custom_paths/pizzapaper  #This is my personal testing/dev file, you don't need to worry about it
     fi
   else
-    echo "pizzapaper is already in the path directory: /usr/local/bin/"
+    echo "pizzapaper is already in the path directory: /usr/custom_paths/"
   fi
 }
 
