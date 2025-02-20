@@ -4,8 +4,8 @@
 user="pizza2d1"
 
 RemoveFile (){
-  if test -f /usr/local/bin/pizzapaper; then		  #If pizzapaper is found in the path file, then it will delete it
-    rm /usr/local/bin/pizzapaper
+  if test -f /usr/custom_paths/pizzapaper; then		  #If pizzapaper is found in the path file, then it will delete it
+    rm /usr/custom_paths/pizzapaper
   else
     echo "pizzapaper was not found in that directory, it may have already been removed"
   fi
@@ -14,9 +14,11 @@ RemoveFile (){
 AddFile (){
   if ! test -f /usr/local/bin/pizzapaper; then		#If pizzapaper is NOT found in the path file, it will add it
     if test -f */pizzapaper; then
-      cp ./pizza-paper.sh /usr/local/bin/pizzapaper
+      mkdir /usr/custom_paths
+      cp ./pizza-paper.sh /usr/custom_paths/pizzapaper
     else
-      cp ./pizzapaper_testing.sh /usr/local/bin/pizzapaper  #This is my personal testing/dev file, you don't need to worry about it
+      mkdir /usr/custom_paths
+      cp ./pizzapaper_testing.sh /usr/custom_paths/pizzapaper  #This is my personal testing/dev file, you don't need to worry about it
     fi
   else
     echo "pizzapaper is already in the path directory: /usr/local/bin/"
