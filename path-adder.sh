@@ -9,6 +9,7 @@ RemoveFile (){
     rmdir /usr/custom_paths
     if [ $? -ne 0 ]; then
       echo "/usr/custom_paths wasn't empty, you either have extra files in that directory or will have do remove it manually"
+    fi
   else
     echo "pizzapaper was not found in that directory, it may have already been removed"
   fi
