@@ -23,4 +23,3 @@ DIRECTORY /home/USERNAME/Pictures/pizza-papers-------------#Storing custom and s
 FILE /home/$USERNAME/Pictures/pizza-papers/settings.log----#Stores settings for when you close the terminal
 FILE /home/USERNAME/Documents/pizza-papers.txt------#Storing custom wallpaper paths and names
 DIRECTORY /home/USERNAME/Documents----------------------------#Storing pizza-papers.txt
-FILE /home/USERNAME/Documents/pizza-papers.txt--------------#Storing custom wallpaper paths and names
