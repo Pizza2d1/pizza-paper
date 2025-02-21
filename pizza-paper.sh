@@ -338,9 +338,9 @@ function RotateWallpaper (){
       fi
     done
     for i in $(seq $StartingIndex $((${#WallpaperList[@]}-1))); do
-      if [[ ${WallpaperList[i]} != *"astolfo"* ]] && [[ $FagFlag == false ]]; then 
+      if [[ ${WallpaperList[i]} == *"astolfo"* ]] && [[ $FagFlag == false ]]; then 
         continue
-      else  
+      else
         gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
         gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
         sleep $ROTATION_SPEED
