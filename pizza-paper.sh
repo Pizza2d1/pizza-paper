@@ -711,8 +711,6 @@ while true; do
         else
           FagFlag=(false)
         fi
-        echo $3
-        echo $FagFlag
         RotateWallpaper
         exit;;
     --help)				          #Will activate when pizzapaper --help is used, the BETTER option for getting info)
