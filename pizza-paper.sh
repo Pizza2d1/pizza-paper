@@ -825,9 +825,10 @@ function RotateWallpaper (){
   if [[ ${WallpaperList[@]} == *${CurrentWallpaper:1:-1}* ]]; then
     for item in $(seq 0 ${#WallpaperList[@]}); do
       if [[ ${WallpaperList[$item]} == *${CurrentWallpaper:1:-1}* ]]; then
-        Index=$item;
+        StartingIndex=$item;
       fi
     done
+<<<<<<< HEAD
     for i in $(seq $Index $((${#WallpaperList[@]}-1))); do
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -842,6 +843,15 @@ function RotateWallpaper (){
           sleep $ROTATION_SPEED
           echo "Wump"
         fi
+=======
+    for i in $(seq $StartingIndex $((${#WallpaperList[@]}-1))); do
+      if [[ ${WallpaperList[i]} != *"astolfo"* ]] && [[ $FagFlag == false ]]; then 
+        continue
+      else  
+        gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
+        gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
+        sleep $ROTATION_SPEED
+>>>>>>> 9f42fa2 (Fixed rotation command)
       fi
 <<<<<<< HEAD
 =======
@@ -862,6 +872,7 @@ function RotateWallpaper (){
     for i in $(seq 0 $((${#WallpaperList[@]}-1))); do
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 3031276 (Update to 1.2.7, changed PATH directory for path_adder.sh)
       if [[ ! ${WallpaperList[i]} == *"astolfo"* ]]; then
@@ -873,6 +884,16 @@ function RotateWallpaper (){
           sleep $ROTATION_SPEED
           echo "Wump"
         fi
+=======
+      if [[ ${WallpaperList[i]} == *"astolfo"* ]] && [[ $FagFlag == false ]]; then 
+        echo piss
+        echo $FagFlag
+        continue
+      else
+        gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
+        gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
+        sleep $ROTATION_SPEED
+>>>>>>> 9f42fa2 (Fixed rotation command)
       fi
     done
   done
