@@ -334,19 +334,16 @@ function RotateWallpaper (){
   if [[ ${WallpaperList[@]} == *${CurrentWallpaper:1:-1}* ]]; then
     for item in $(seq 0 ${#WallpaperList[@]}); do
       if [[ ${WallpaperList[$item]} == *${CurrentWallpaper:1:-1}* ]]; then
-        Index=$item;
+        StartingIndex=$item;
       fi
     done
-    for i in $(seq $Index $((${#WallpaperList[@]}-1))); do
-      if [[ ! ${WallpaperList[i]} == *"astolfo"* ]]; then
-        if ! $FagFlag; then
-          continue
-        else
-          gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
-          gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
-          sleep $ROTATION_SPEED
-          echo "Wump"
-        fi
+    for i in $(seq $StartingIndex $((${#WallpaperList[@]}-1))); do
+      if [[ ${WallpaperList[i]} == *"astolfo"* ]] && [[ $FagFlag == false ]]; then 
+        continue
+      else
+        gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
+        gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
+        sleep $ROTATION_SPEED
       fi
     done
   fi
@@ -357,15 +354,12 @@ function RotateWallpaper (){
       $CurrentWallpaperDark=$CurrentWallpaper
     fi
     for i in $(seq 0 $((${#WallpaperList[@]}-1))); do
-      if [[ ! ${WallpaperList[i]} == *"astolfo"* ]]; then
-        if ! $FagFlag; then
-          continue
-        else
-          gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
-          gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
-          sleep $ROTATION_SPEED
-          echo "Wump"
-        fi
+      if [[ ${WallpaperList[i]} == *"astolfo"* ]] && [[ $FagFlag == false ]]; then 
+        continue
+      else
+        gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
+        gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
+        sleep $ROTATION_SPEED
       fi
     done
   done
@@ -717,8 +711,6 @@ while true; do
         else
           FagFlag=(false)
         fi
-        echo $3
-        echo $FagFlag
         RotateWallpaper
         exit;;
     --help)				          #Will activate when pizzapaper --help is used, the BETTER option for getting info)
