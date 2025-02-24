@@ -1,10 +1,11 @@
 # pizza-paper ver 1.2.7
 A GNOME wallpaper switching bash script that I made to try and learn some bash (because I think Ill use it in future careers) and because I wanted it to be customizable to me, I use linux btw
-___
+
+
 Most likely the last version that I work on unless I care enough
 
 # How to use
-###### Prerequisites
+### Prerequisites
 You must be on a _GNOME_ version of linux, as this uses the gsettings command
 
 List of some GNOME pre-installed distros:
@@ -13,14 +14,14 @@ List of some GNOME pre-installed distros:
 - Fedora
 - Debian
 
-#### Download
+### Download
 Either download the zip file and extract it, or you can clone it with:
 ```
 git clone https://github.com/Pizza2d1/pizza-paper.git
 ```
 Then, all you have to do is run the `pizza-paper.sh` program
 
-#### Usage
+### Usage
 All functionality can be done with pizza-paper.sh and does not require any additional packages to be downloaded (if you are on main linux distros)
 # Image Here
 ___
