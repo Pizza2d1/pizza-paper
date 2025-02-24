@@ -26,7 +26,7 @@ Then, all you have to do is run the `pizza-paper.sh` program:
 
 ### Usage
 All functionality can be done with pizza-paper.sh and does not require any additional packages to be downloaded (if you are on main linux distros)
-# Image Here
+![Example Usage](https://github.com/pizza2d1/Github-Images/blob/main/better-pizza-paper-embed.gif?raw=true)
 ___
 ### Error Cases
 1. __Make sure you are not running it as root (sudo)__
