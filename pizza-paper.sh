@@ -24,12 +24,10 @@ if [ -f /home/$user/Pictures/pizza-papers/mountains.jpg ] && [ -f /home/$user/Pi
   ShortHelpFlag="|m|a|s|t"                                                            #Will display sample wallpaper options if the user has them downloaded
   SampleWallpaperStatus=""                                                            #Will NOT say something if the user has sample images
   YesYouHaveIt="(If you would like to delete them, use \"$ProgName --sample remove\")"          #Will tell the user if they have the sample images if it detects them
-  WallpaperAccess=true                                                                #Will allow the user to access the sample images now that they're downloaded
 else
   ShortHelpFlag=""                                                                    #Will display sample wallpaper options if the user has them downloaded (they dont)
   SampleWallpaperStatus=" (Must use --sample argument to install sample wallpapers)"  #The double spacing is needed to make sure that the variable doesn't touch the text in the help command
   YesYouHaveIt="(I recommend that you do)"                                            #No they don't have it
-  WallpaperAccess=false                                                               #Will prevent the user from triggering the sample wallpaper functions because they haven't been downloaded
 fi
 ###########################################
 
@@ -573,21 +571,21 @@ while true; do
          Less_Help
          exit;;
       -m | -mountain)       #Will make the desktop background a mountainside)
-         if $WallpaperAccess; then
+         if [[  ${WallpaperList[@]} == *"mountains.jpg"* ]]; then	
            Mountain_Wallpaper
          else
            echo -e "You must run \"$ProgName --sample\" to download these files"
          fi
          exit;;
       -a | -astolfo)        #Will make the desktop background astolfo)
-         if $WallpaperAccess; then
+         if [[  ${WallpaperList[@]} == *"astolfo.jpg"* ]]; then	
            Astolfo_Wallpaper
          else
            echo -e "You must run \"$ProgName --sample\" to download these files"
          fi
          exit;;
       -s | -sunglasses)     #Will make the desktop background some sunglasses)
-         if $WallpaperAccess; then
+         if [[  ${WallpaperList[@]} == *"sunglasses.jpg"* ]]; then	
            Sunglasses_Wallpaper
          else
            echo -e "You must run \"$ProgName --sample\" to download these files"
