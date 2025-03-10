@@ -20,7 +20,7 @@ elif [ -f ./pizza-paper.sh ]; then
   ProgName="./pizza-paper.sh"
 fi
 #Checks to see if the user decided to download all the included wallpapers (pizzapaper --sample)
-if [ -f /home/$user/Pictures/pizza-papers/mountains.jpg ] && [ -f /home/$user/Pictures/pizza-papers/astolfo.jpg ] && [ -f /home/$user/Pictures/pizza-papers/sunglasses.jpeg ] && [ -f /home/$user/Pictures/pizza-papers/TRAINS.jpg ]; then
+if [ -f /home/$user/Pictures/pizza-papers/mountains.jpg ] && [ -f /home/$user/Pictures/pizza-papers/aperture.jpg ] && [ -f /home/$user/Pictures/pizza-papers/sunglasses.jpeg ] && [ -f /home/$user/Pictures/pizza-papers/TRAINS.jpg ]; then
   ShortHelpFlag="|m|a|s|t"                                                            #Will display sample wallpaper options if the user has them downloaded
   SampleWallpaperStatus=""                                                            #Will NOT say something if the user has sample images
   YesYouHaveIt="(If you would like to delete them, use \"$ProgName --sample remove\")"          #Will tell the user if they have the sample images if it detects them
@@ -90,7 +90,7 @@ function Help_Options (){                     #Gives the user instructions on ho
   echo -e "  E.G. \"$ProgName -h\", \"$ProgName --sample\", or \"$ProgName --add\"\n\n"
   echo -e "   -h                 Gives the user a simple idea of what options to choose\n"
   echo -e "   -m | -mountain     Switches wallpaper to a mountainside           $SampleWallpaperStatus\n"
-  echo -e "   -a | -astolfo      Switches wallpaper to Astolfo                  $SampleWallpaperStatus\n"
+  echo -e "   -a | -aperture      Switches wallpaper to aperture                  $SampleWallpaperStatus\n"
   echo -e "   -s | -sunglasses   Switches wallpaper to sunglasses on a beach    $SampleWallpaperStatus\n"
   echo -e "   -t | -train        Switches wallpaper to a picture of a train     $SampleWallpaperStatus\n"
   echo -e "  --sample            Will download sample images $YesYouHaveIt\n"
@@ -338,7 +338,7 @@ function RotateWallpaper (){
       fi
     done
     for i in $(seq $Index $((${#WallpaperList[@]}-1))); do
-      if [[ ! ${WallpaperList[i]} == *"astolfo"* ]]; then
+      if [[ ! ${WallpaperList[i]} == *"aperture"* ]]; then
         if ! $FagFlag; then
           continue
         else
@@ -357,7 +357,7 @@ function RotateWallpaper (){
       $CurrentWallpaperDark=$CurrentWallpaper
     fi
     for i in $(seq 0 $((${#WallpaperList[@]}-1))); do
-      if [[ ! ${WallpaperList[i]} == *"astolfo"* ]]; then
+      if [[ ! ${WallpaperList[i]} == *"aperture"* ]]; then
         if ! $FagFlag; then
           continue
         else
@@ -548,10 +548,10 @@ function Mountain_Wallpaper (){		  #Sets the wallpaper to a cool mountainside
   gsettings set org.gnome.desktop.background picture-uri-dark file:///home/$user/Pictures/pizza-papers/mountains.jpg
   gsettings set org.gnome.desktop.background picture-uri file:///home/$user/Pictures/pizza-papers/mountains.jpg
 }
-function Astolfo_Wallpaper (){		  #Sets the wallpaper to astolfo because I have a feeling my friends will open it
+function aperture_Wallpaper (){		  #Sets the wallpaper to aperture because I have a feeling my friends will open it
   gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
-  gsettings set org.gnome.desktop.background picture-uri-dark file:///home/$user/Pictures/pizza-papers/astolfo.jpg
-  gsettings set org.gnome.desktop.background picture-uri file:///home/$user/Pictures/pizza-papers/astolfo.jpg
+  gsettings set org.gnome.desktop.background picture-uri-dark file:///home/$user/Pictures/pizza-papers/aperture.jpg
+  gsettings set org.gnome.desktop.background picture-uri file:///home/$user/Pictures/pizza-papers/aperture.jpg
 }
 function Sunglasses_Wallpaper (){		#Sets the wallpaper to a beach photo with some sunglasses
   gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
@@ -567,7 +567,7 @@ function Trains_Wallpaper (){	      #Sets the wallpaper to the inside of a autis
 
 
 #Lists the different options that the user can choose from, "hmast" is for individual letters options like "-h" and "-m"
-options=$(getopt -o hmast,help,mountain,astolfo,sunglasses,train --long "add,select,remove,sample,settings,help,version,normal,rotate" -- "$@")
+options=$(getopt -o hmast,help,mountain,aperture,sunglasses,train --long "add,select,remove,sample,settings,help,version,normal,rotate" -- "$@")
 [ $? -eq 0 ] || {
     echo "Incorrect options provided"
     exit 1
@@ -585,9 +585,9 @@ while true; do
            echo -e "You must run \"$ProgName --sample\" to download these files"
          fi
          exit;;
-      -a | -astolfo)        #Will make the desktop background astolfo)
-         if [[  ${WallpaperList[@]} == *"astolfo.jpg"* ]]; then
-           Astolfo_Wallpaper
+      -a | -aperture)        #Will make the desktop background aperture)
+         if [[  ${WallpaperList[@]} == *"aperture.jpg"* ]]; then
+           aperture_Wallpaper
          else
            echo -e "You must run \"$ProgName --sample\" to download these files"
          fi
@@ -654,7 +654,7 @@ while true; do
           if test -f /home/$user/Pictures/pizza-papers/TRAINS.jpg; then
             echo -e "Deleted sample wallpapers\n"
             rm /home/$user/Pictures/pizza-papers/mountains.jpg
-            rm /home/$user/Pictures/pizza-papers/astolfo.jpg
+            rm /home/$user/Pictures/pizza-papers/aperture.jpg
             rm /home/$user/Pictures/pizza-papers/sunglasses.jpeg
             rm /home/$user/Pictures/pizza-papers/TRAINS.jpg
             FallbackWallpaper
@@ -668,14 +668,14 @@ while true; do
         fi
         if [[ $uinput == *"y"* || $2 == *"y"* ]]; then
         #Requests images from different website links (they are extracted in incoherant names)
-          urls="https://images.unsplash.com/photo-1510711789248-087061cda288?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D https://images4.alphacoders.com/906/thumb-1920-906149.png https://images.wallpaperscraft.com/image/single/train_railway_forest_169685_1920x1080.jpg"
+          urls="https://images.unsplash.com/photo-1510711789248-087061cda288?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dhttps://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77701688687.jpg https://images4.alphacoders.com/906/thumb-1920-906149.png https://images.wallpaperscraft.com/image/single/train_railway_forest_169685_1920x1080.jpg"
           for links in $urls; do
             cd /home/pizza2d1/Pictures/pizza-papers/ && { curl -O $links ; cd -; }
           done
           #This part will make them readable (and in the case of sunglasses, usable), they are in order of links above
           mv /home/$user/Pictures/pizza-papers/photo-1510711789248-087061cda288 /home/$user/Pictures/pizza-papers/mountains.jpg
           mv /home/$user/Pictures/pizza-papers/photo-1473496169904-658ba7c44d8a /home/$user/Pictures/pizza-papers/sunglasses.jpeg #There was no image extension so I had to add it to make it work
-          mv /home/$user/Pictures/pizza-papers/thumb-1920-906149.png /home/$user/Pictures/pizza-papers/astolfo.jpg
+          mv /home/$user/Pictures/pizza-papers/High_resolution_wallpaper_background_ID_77701688687.jpg /home/$user/Pictures/pizza-papers/aperture.jpg
           if [ $? -ne 0 ]; then #Makes sure that the train wallpaper is still in the pizza-papers dir as a sign that the user still has all sample wallpapers
             echo -e "\nThird download failed; Make sure you are not on school wifi"
           fi
@@ -684,8 +684,8 @@ while true; do
           if [[  ${WallpaperList[@]} != *"mountains.jpg"* ]]; then	
             echo "/home/$user/Pictures/pizza-papers/mountains.jpg" >> /home/$user/Documents/pizzapapers.txt   #If there is not already this sample image name put into the wallpaper list, it will add it
           fi
-          if [[  ${WallpaperList[@]} != *"astolfo.jpg"* ]]; then	
-            echo "/home/$user/Pictures/pizza-papers/astolfo.jpg" >> /home/$user/Documents/pizzapapers.txt   #If there is not already this sample image name put into the wallpaper list, it will add it
+          if [[  ${WallpaperList[@]} != *"aperture.jpg"* ]]; then	
+            echo "/home/$user/Pictures/pizza-papers/aperture.jpg" >> /home/$user/Documents/pizzapapers.txt   #If there is not already this sample image name put into the wallpaper list, it will add it
           fi
           if [[  ${WallpaperList[@]} != *"sunglasses.jpeg"* ]]; then	
             echo "/home/$user/Pictures/pizza-papers/sunglasses.jpeg" >> /home/$user/Documents/pizzapapers.txt   #If there is not already this sample image name put into the wallpaper list, it will add it
