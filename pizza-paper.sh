@@ -668,14 +668,14 @@ while true; do
         fi
         if [[ $uinput == *"y"* || $2 == *"y"* ]]; then
         #Requests images from different website links (they are extracted in incoherant names)
-          urls="https://images.unsplash.com/photo-1510711789248-087061cda288?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dhttps://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77701688687.jpg https://images4.alphacoders.com/906/thumb-1920-906149.png https://images.wallpaperscraft.com/image/single/train_railway_forest_169685_1920x1080.jpg"
+          urls="https://images.unsplash.com/photo-1510711789248-087061cda288?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D https://wallpapercat.com/w/full/d/f/7/791-1920x1080-desktop-full-hd-portal-2-game-background-image.jpg https://images.wallpaperscraft.com/image/single/train_railway_forest_169685_1920x1080.jpg"
           for links in $urls; do
             cd /home/pizza2d1/Pictures/pizza-papers/ && { curl -O $links ; cd -; }
           done
           #This part will make them readable (and in the case of sunglasses, usable), they are in order of links above
           mv /home/$user/Pictures/pizza-papers/photo-1510711789248-087061cda288 /home/$user/Pictures/pizza-papers/mountains.jpg
           mv /home/$user/Pictures/pizza-papers/photo-1473496169904-658ba7c44d8a /home/$user/Pictures/pizza-papers/sunglasses.jpeg #There was no image extension so I had to add it to make it work
-          mv /home/$user/Pictures/pizza-papers/High_resolution_wallpaper_background_ID_77701688687.jpg /home/$user/Pictures/pizza-papers/aperture.jpg
+          mv /home/$user/Pictures/pizza-papers/791-1920x1080-desktop-full-hd-portal-2-game-background-image.jpg /home/$user/Pictures/pizza-papers/aperture.jpg
           if [ $? -ne 0 ]; then #Makes sure that the train wallpaper is still in the pizza-papers dir as a sign that the user still has all sample wallpapers
             echo -e "\nThird download failed; Make sure you are not on school wifi"
           fi
