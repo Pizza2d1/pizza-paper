@@ -24,10 +24,12 @@ if [ -f /home/$user/Pictures/pizza-papers/mountains.jpg ] && [ -f /home/$user/Pi
   ShortHelpFlag="|m|a|s|t"                                                            #Will display sample wallpaper options if the user has them downloaded
   SampleWallpaperStatus=""                                                            #Will NOT say something if the user has sample images
   YesYouHaveIt="(If you would like to delete them, use \"$ProgName --sample remove\")"          #Will tell the user if they have the sample images if it detects them
+  WallpaperAccess=true                                                                #Will allow the user to access the sample images now that they're downloaded
 else
   ShortHelpFlag=""                                                                    #Will display sample wallpaper options if the user has them downloaded (they dont)
   SampleWallpaperStatus=" (Must use --sample argument to install sample wallpapers)"  #The double spacing is needed to make sure that the variable doesn't touch the text in the help command
   YesYouHaveIt="(I recommend that you do)"                                            #No they don't have it
+  WallpaperAccess=false                                                               #Will prevent the user from triggering the sample wallpaper functions because they haven't been downloaded
 fi
 ###########################################
 
@@ -140,7 +142,7 @@ function AddWallpaper (){                     #Will let the user add a wallpaper
     URL=$(zenity --entry --title="Please input a image URL")
     if [[ $URL == *".jpg"* || $URL == *".jpeg"* || $URL == *".png"* ]]; then           #Will only accept files that contain image extensions
       if [[  ${WallpaperList[@]} != *"$URL"* ]]; then					                         #Checks to make sure that PART of $fileL is nowhere in the WallpaperList array
-        cd /home/$user/Pictures/pizza-papers/ && { curl -O "$URL" ; cd -; }            #Downloads the URL image to the pizza-papers directory
+        cd /home/pizza2d1/Pictures/pizza-papers/ && { curl -O "$URL" ; cd -; }            #Downloads the URL image to the pizza-papers directory
         cp $URL /home/$user/Pictures/pizza-papers/                                  #Copies wallpaper file to pizza-papers so it can be selected in gui
         echo "$URL" >> /home/$user/Documents/pizzapapers.txt
         echo "$(basename $URL) has been added to your wallpapers"
@@ -332,16 +334,19 @@ function RotateWallpaper (){
   if [[ ${WallpaperList[@]} == *${CurrentWallpaper:1:-1}* ]]; then
     for item in $(seq 0 ${#WallpaperList[@]}); do
       if [[ ${WallpaperList[$item]} == *${CurrentWallpaper:1:-1}* ]]; then
-        StartingIndex=$item;
+        Index=$item;
       fi
     done
-    for i in $(seq $StartingIndex $((${#WallpaperList[@]}-1))); do
-      if [[ ${WallpaperList[i]} == *"astolfo"* ]] && [[ $FagFlag == false ]]; then 
-        continue
-      else
-        gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
-        gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
-        sleep $ROTATION_SPEED
+    for i in $(seq $Index $((${#WallpaperList[@]}-1))); do
+      if [[ ! ${WallpaperList[i]} == *"astolfo"* ]]; then
+        if ! $FagFlag; then
+          continue
+        else
+          gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
+          gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
+          sleep $ROTATION_SPEED
+          echo "Wump"
+        fi
       fi
     done
   fi
@@ -352,12 +357,15 @@ function RotateWallpaper (){
       $CurrentWallpaperDark=$CurrentWallpaper
     fi
     for i in $(seq 0 $((${#WallpaperList[@]}-1))); do
-      if [[ ${WallpaperList[i]} == *"astolfo"* ]] && [[ $FagFlag == false ]]; then 
-        continue
-      else
-        gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
-        gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
-        sleep $ROTATION_SPEED
+      if [[ ! ${WallpaperList[i]} == *"astolfo"* ]]; then
+        if ! $FagFlag; then
+          continue
+        else
+          gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
+          gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
+          sleep $ROTATION_SPEED
+          echo "Wump"
+        fi
       fi
     done
   done
@@ -571,21 +579,21 @@ while true; do
          Less_Help
          exit;;
       -m | -mountain)       #Will make the desktop background a mountainside)
-         if [[  ${WallpaperList[@]} == *"mountains.jpg"* ]]; then	
+         if [[  ${WallpaperList[@]} == *"mountains.jpg"* ]]; then
            Mountain_Wallpaper
          else
            echo -e "You must run \"$ProgName --sample\" to download these files"
          fi
          exit;;
       -a | -astolfo)        #Will make the desktop background astolfo)
-         if [[  ${WallpaperList[@]} == *"astolfo.jpg"* ]]; then	
+         if [[  ${WallpaperList[@]} == *"astolfo.jpg"* ]]; then
            Astolfo_Wallpaper
          else
            echo -e "You must run \"$ProgName --sample\" to download these files"
          fi
          exit;;
       -s | -sunglasses)     #Will make the desktop background some sunglasses)
-         if [[  ${WallpaperList[@]} == *"sunglasses.jpeg"* ]]; then	
+         if [[  ${WallpaperList[@]} == *"sunglasses.jpeg"* ]]; then
            Sunglasses_Wallpaper
          else
            echo -e "You must run \"$ProgName --sample\" to download these files"
@@ -606,7 +614,7 @@ while true; do
         if [[ $2 == *"https"* ]] && [[ $2 == *".jpg"* || $2 == *".jpeg"* || $2 == *".png"* ]]; then   #Will only accept URLs with https and valid image file extensions
           if [[  ${WallpaperList[@]} != *"$2"* ]]; then					                                      #Checks to make sure that PART of $fileL is nowhere in the WallpaperList array
             feh $2 -E 128 -y 128								                                                      #Show the new wallpaper in a -E (height) 128 px and -y (width) 128 px (yes they made -y be width)
-            cd /home/$user/Pictures/pizza-papers/ && { curl -O "$2" ; cd -; }                      #Downloads the URL image to the pizza-papers directory
+            cd /home/pizza2d1/Pictures/pizza-papers/ && { curl -O "$2" ; cd -; }                      #Downloads the URL image to the pizza-papers directory
             echo "$2" >> /home/$user/Documents/pizzapapers.txt
           else
             echo "That wallpaper is already in your list of wallpapers"
@@ -662,7 +670,7 @@ while true; do
         #Requests images from different website links (they are extracted in incoherant names)
           urls="https://images.unsplash.com/photo-1510711789248-087061cda288?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D https://images4.alphacoders.com/906/thumb-1920-906149.png https://images.wallpaperscraft.com/image/single/train_railway_forest_169685_1920x1080.jpg"
           for links in $urls; do
-            cd /home/$user/Pictures/pizza-papers/ && { curl -O $links ; cd -; }
+            cd /home/pizza2d1/Pictures/pizza-papers/ && { curl -O $links ; cd -; }
           done
           #This part will make them readable (and in the case of sunglasses, usable), they are in order of links above
           mv /home/$user/Pictures/pizza-papers/photo-1510711789248-087061cda288 /home/$user/Pictures/pizza-papers/mountains.jpg
@@ -709,6 +717,8 @@ while true; do
         else
           FagFlag=(false)
         fi
+        echo $3
+        echo $FagFlag
         RotateWallpaper
         exit;;
     --help)				          #Will activate when pizzapaper --help is used, the BETTER option for getting info)
