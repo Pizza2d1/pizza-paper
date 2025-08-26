@@ -1,5 +1,5 @@
 # pizza-paper 1.2.7
-A GNOME wallpaper switching bash script that I made to try and learn some bash (because I think Ill use it in future careers) and because I wanted to make a quick wallpaper switcher that I can use in both cli and gui, I use linux btw
+A GNOME/swww wallpaper switching bash script that I made to try and learn some bash (because I think Ill use it in future careers) and because I wanted to make a quick wallpaper switcher that I can use in both cli and gui, I use linux btw
 
 
 Most likely the last version that I work on unless I care enough
