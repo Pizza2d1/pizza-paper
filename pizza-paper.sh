@@ -203,6 +203,7 @@ function SelectWallpaper (){                  #The user chooses a wallpaper that
     gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
     gsettings set org.gnome.desktop.background picture-uri-dark ${WallpaperList[ (($uinput-1)) ]}
     gsettings set org.gnome.desktop.background picture-uri ${WallpaperList[ (($uinput-1)) ]}
+    swww img ${WallpaperList[ (($uinput-1)) ]}
   else
     echo "Invalid input"
   fi
@@ -226,6 +227,7 @@ function GUISelectWallpaper (){               #The user chooses a wallpaper out 
       echo "$FirstImage is now your desktop wallpaper"
       gsettings set org.gnome.desktop.background picture-uri-dark /home/$user/Pictures/pizza-papers/$FirstImage
       gsettings set org.gnome.desktop.background picture-uri /home/$user/Pictures/pizza-papers/$FirstImage
+      swww img /home/$user/Pictures/pizza-papers/$FirstImage
     fi
     rm ./TEMPLIST.txt
     exit;
@@ -324,6 +326,7 @@ function FallbackWallpaper (){                #If the user deletes their current
     echo -e "\nLooks like you deleted your current wallpaper, reverting back to your original wallpaper\n"
     gsettings set org.gnome.desktop.background picture-uri "${SettingsText[ (($AMOUNT_OF_SETTINGS-1)) ]}"
     gsettings set org.gnome.desktop.background picture-uri-dark "${SettingsText[ (($AMOUNT_OF_SETTINGS-1)) ]}"
+    swww img "${SettingsText[ (($AMOUNT_OF_SETTINGS-1)) ]}"
   fi
 }
 
@@ -341,6 +344,7 @@ function RotateWallpaper (){
       else
         gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
         gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
+        swww img "${WallpaperList[i]}"
         sleep $ROTATION_SPEED
       fi
     done
@@ -357,6 +361,7 @@ function RotateWallpaper (){
       else
         gsettings set org.gnome.desktop.background picture-uri "${WallpaperList[i]}"
         gsettings set org.gnome.desktop.background picture-uri-dark "${WallpaperList[i]}"
+        swww img "${WallpaperList[i]}"
         sleep $ROTATION_SPEED
       fi
     done
@@ -539,21 +544,25 @@ function Mountain_Wallpaper (){		  #Sets the wallpaper to a cool mountainside
   gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
   gsettings set org.gnome.desktop.background picture-uri-dark file:///home/$user/Pictures/pizza-papers/mountains.jpg
   gsettings set org.gnome.desktop.background picture-uri file:///home/$user/Pictures/pizza-papers/mountains.jpg
+  swww img /home/$user/Pictures/pizza-papers/mountains.jpg
 }
 function Astolfo_Wallpaper (){		  #Sets the wallpaper to astolfo because I have a feeling my friends will open it
   gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
   gsettings set org.gnome.desktop.background picture-uri-dark file:///home/$user/Pictures/pizza-papers/astolfo.jpg
   gsettings set org.gnome.desktop.background picture-uri file:///home/$user/Pictures/pizza-papers/astolfo.jpg
+  swww img /home/$user/Pictures/pizza-papers/astolfo.jpg
 }
 function Sunglasses_Wallpaper (){		#Sets the wallpaper to a beach photo with some sunglasses
   gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
   gsettings set org.gnome.desktop.background picture-uri-dark file:///home/$user/Pictures/pizza-papers/sunglasses.jpeg
   gsettings set org.gnome.desktop.background picture-uri file:///home/$user/Pictures/pizza-papers/sunglasses.jpeg
+  swww img /home/$user/Pictures/pizza-papers/sunglasses.jpeg
 }
 function Trains_Wallpaper (){	      #Sets the wallpaper to the inside of a autist's mind
   gsettings set org.gnome.desktop.background picture-uri-dark / #Resets wallpaper to prevent the selected wallpaper from not refreshing
   gsettings set org.gnome.desktop.background picture-uri-dark file:///home/$user/Pictures/pizza-papers/TRAINS.jpg
   gsettings set org.gnome.desktop.background picture-uri file:///home/$user/Pictures/pizza-papers/TRAINS.jpg
+  swww img /home/$user/Pictures/pizza-papers/TRAINS.jpg
 }
 ###########################################
 
@@ -629,6 +638,7 @@ while true; do
           echo "$(basename ${WallpaperList[$2-1]}) is now your new wallpaper"
           gsettings set org.gnome.desktop.background picture-uri-dark ${WallpaperList[ (($2-1)) ]}
           gsettings set org.gnome.desktop.background picture-uri ${WallpaperList[ (($2-1)) ]}
+          swww img ${WallpaperList[ (($2-1)) ]}
         elif [[ $(echo "WantCLI" | GetSettings) == "0" ]]; then #If the user chose to have a CLI instead of GUI in settings, it will do that instead
           GUISelectWallpaper
         else
